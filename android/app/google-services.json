@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "262087579698",
+    "project_id": "superfitbuddy",
+    "storage_bucket": "superfitbuddy.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:262087579698:android:a3c3f13710e12e0817842b",
+        "android_client_info": {
+          "package_name": "com.example.superfitbuddy"
+        }
+      },//wefw
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB3AjaJ4KFPFrPLQFM-6eTgIx_0d6h0ALo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
