@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'firebase_options.dart';
+import 'map/mapView.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -76,10 +77,25 @@ class _FirebaseTestPageState extends State<FirebaseTestPage> {
         title: Text(widget.title),
       ),
       body: Center(
-        child: Text(
-          _status,
-          textAlign: TextAlign.center,
-          style: Theme.of(context).textTheme.headlineMedium,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center, // Centre verticalement
+          children: [
+            Text(
+              _status,
+              textAlign: TextAlign.center,
+              style: Theme.of(context).textTheme.headlineMedium,
+            ),
+            const SizedBox(height: 16),
+            TextButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => InteractiveMap()),
+                );
+              },
+              child: const Text('on test la map'),
+            ),
+          ],
         ),
       ),
     );
