@@ -84,32 +84,8 @@ class _InteractiveMapState extends State<InteractiveMap> {
             ),
           ),
 
-          // Affichage du niveau de zoom
-          Positioned(
-            top: 20,
-            left: 20,
-            child: Container(
-              padding: const EdgeInsets.all(8),
-              color: Colors.black54,
-              child: Text(
-                'Zoom: ${_currentZoom.toStringAsFixed(1)}',
-                style: const TextStyle(color: Colors.white),
-              ),
-            ),
-          ),
 
-          Positioned(
-            top: 20,
-            left: 20,
-            child: Container(
-              padding: const EdgeInsets.all(8),
-              color: Colors.black54,
-              child: Text(
-                'Zoom: ${_currentZoom.toStringAsFixed(1)}',
-                style: const TextStyle(color: Colors.white),
-              ),
-            ),
-          ),
+
           //retour a l'écran précédent
           Positioned(
             top: 40,
