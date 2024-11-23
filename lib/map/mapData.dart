@@ -4,14 +4,15 @@ import 'package:latlong2/latlong.dart';
 
 // Liste des points de données
 final List<Map<String, dynamic>> points = [
-  {'latitude': 45.5017, 'longitude': -73.5673, 'name': 'Montréal'},
-  {'latitude': 46.8139, 'longitude': -71.2082, 'name': 'Québec'},
-  {'latitude': 43.65107, 'longitude': -79.347015, 'name': 'Toronto'},
+  {'latitude': 45.5017, 'longitude': -73.5673,'Sport' : 'Bisebal', 'name': 'Montréal'},
+  {'latitude': 46.8139, 'longitude': -71.2082,'Sport' : 'BoseBal', 'name': 'Québec'},
+  {'latitude': 43.65107, 'longitude': -79.347015,'Sport' : 'BIBIBal', 'name': 'Toronto'},
 ];
 
 // Fonction pour générer les marqueurs
 List<Marker> genererMarqueurs(List<Map<String, dynamic>> points) {
   return points.map((point) {
+    //String sport = point['Sport'];
     return Marker(
       point: LatLng(point['latitude'], point['longitude']),
       width: 80,
@@ -32,7 +33,7 @@ List<Marker> genererMarqueurs(List<Map<String, dynamic>> points) {
                     ),
                     const SizedBox(height: 8), // Espacement entre les lignes
                     const Text(
-                      "Sport : Football",
+                        "Sport : test"
                     ),
                     const SizedBox(height: 8),
                     const Text(

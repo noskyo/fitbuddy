@@ -72,12 +72,12 @@ class _InteractiveMapState extends State<InteractiveMap> {
             child: Column(
               children: [
                 ElevatedButton(
-                  onPressed: () => _changeZoom(1.0),
+                  onPressed: () => _changeZoom(3.0),
                   child: const Icon(Icons.zoom_in),
                 ),
                 const SizedBox(height: 10),
                 ElevatedButton(
-                  onPressed: () => _changeZoom(-1.0),
+                  onPressed: () => _changeZoom(-3.0),
                   child: const Icon(Icons.zoom_out),
                 ),
               ],
