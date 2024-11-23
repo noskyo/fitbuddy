@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'firebase_options.dart';
+import 'profile/profilePage.dart';
+import 'bottomBar.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -76,12 +78,30 @@ class _FirebaseTestPageState extends State<FirebaseTestPage> {
         title: Text(widget.title),
       ),
       body: Center(
-        child: Text(
-          _status,
-          textAlign: TextAlign.center,
-          style: Theme.of(context).textTheme.headlineMedium,
-        ),
+        child : Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              _status,
+              textAlign: TextAlign.center,
+              style: Theme.of(context).textTheme.headlineMedium,
+            ),
+            ElevatedButton(
+              onPressed: () {
+                // Naviguer vers la page Profile
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => ProfilePage()),
+                );
+              },
+              child: Text('Voir mon profil'),
+            ),
+          ],
+        )
+
+
       ),
+      bottomNavigationBar: const BottomNavBar(),
     );
   }
 }
