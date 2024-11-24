@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import '../../Feed/FeedPage.dart';
 
-class FormulaireInscription extends StatefulWidget {
-  const FormulaireInscription({super.key});
+class InscriptionForm extends StatefulWidget {
+  const InscriptionForm({super.key});
 
   @override
-  State<FormulaireInscription> createState() => _FormulaireInscriptionState();
+  State<InscriptionForm> createState() => _FormulaireInscriptionState();
 }
 
-class _FormulaireInscriptionState extends State<FormulaireInscription> {
+class _FormulaireInscriptionState extends State<InscriptionForm> {
   final TextEditingController prenomController = TextEditingController();
   final TextEditingController nomController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
@@ -65,6 +67,10 @@ class _FormulaireInscriptionState extends State<FormulaireInscription> {
         });
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Compte créé avec succès !')),
+        );
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => FeedPage()),
         );
       }
     } on FirebaseAuthException catch (e) {
