@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:superfitbuddy/Feed/FeedPage.dart';
 import 'package:superfitbuddy/main.dart';
-import 'profile/profilePage.dart';
-import 'carte/carte.dart';
-import 'Feed/feed.dart';
+import 'Profile/ProfilePage.dart';
+import 'Map/MapPage.dart';
 
 class NavBar extends StatefulWidget {
   const NavBar({super.key});
@@ -31,13 +31,13 @@ class _BottomNavBarState extends State<NavBar> {
       case 1:
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => Feed()),
+          MaterialPageRoute(builder: (context) => FeedPage()),
         );
         break;
       case 2:
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => Carte()),
+          MaterialPageRoute(builder: (context) => MapPage()),
         );
         break;
       case 3:
@@ -62,18 +62,16 @@ class _BottomNavBarState extends State<NavBar> {
         ),
         BottomNavigationBarItem(
             icon: Icon(Icons.ad_units),
-            label: 'Feed'
+            label: 'Activité'
         ),
         BottomNavigationBarItem(
             icon: Icon(Icons.map),
             label: 'Carte',
             backgroundColor: Colors.blue),
-
         BottomNavigationBarItem(
             icon: Icon(Icons.person),
             label: 'Profil'),
       ],
-
     );
   }
 }

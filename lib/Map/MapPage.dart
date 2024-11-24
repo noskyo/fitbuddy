@@ -4,27 +4,27 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import '../firebase_options.dart';
 import '../NavBar.dart';
 
+
 // Page Profile
-class Feed extends StatelessWidget {
+class MapPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Feed'),
+        title: Text('Carte'),
       ),
-      body: const Center(
+      body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             // Informations du profil
             CircleAvatar(
               radius: 50,
-              backgroundImage: NetworkImage(
-                  'https://via.placeholder.com/150'), // Image de profil
+              backgroundImage: NetworkImage('https://via.placeholder.com/150'), // Image de profil
             ),
             SizedBox(height: 20),
             Text(
-              'Nom: Paul Dupont',
+              'Nom: Jean Dupont',
               style: TextStyle(fontSize: 24),
             ),
             SizedBox(height: 10),
@@ -38,6 +38,8 @@ class Feed extends StatelessWidget {
               style: TextStyle(fontSize: 18),
             ),
             SizedBox(height: 20),
+
+
           ],
         ),
       ),

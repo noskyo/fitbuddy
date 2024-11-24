@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import '../NavBar.dart';
 
-class HomePage extends StatefulWidget {
+class FeedPage extends StatefulWidget {
   @override
-  _HomePageState createState() => _HomePageState();
+  _FeedPageState createState() => _FeedPageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _FeedPageState extends State<FeedPage> {
   Position? _currentPosition; // Make nullable to avoid initial errors
 
   @override
