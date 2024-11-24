@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'Test/firebaseCalls.dart'; // Correct the import path to where FirebaseCallsPage is located
 import 'package:firebase_core/firebase_core.dart'; // Import Firebase
-import 'Feed/InitialFeed.dart'; // Import InitialFeed from the Feed folder
+import 'Feed/InitialFeed.dart'; // Correct import path for InitialFeed
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -47,9 +46,10 @@ class MyHomePage extends StatelessWidget {
           const SizedBox(height: 20),
           ElevatedButton(
             onPressed: () {
+              // Navigate to InitialFeed when the button is pressed
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => InitialFeed()), // Navigate to InitialFeed page
+                MaterialPageRoute(builder: (context) => InitialFeed()), // Ensure InitialFeed is defined
               );
             },
             style: ElevatedButton.styleFrom(
