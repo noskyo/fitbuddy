@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
-import 'connexion/formulaire_connexion.dart';
-import 'inscription/formulaire_inscription.dart';
+import 'Connexion/ConnexionForm.dart';
+import 'Inscription/InscriptionForm.dart';
 
-class PageAuthentification extends StatefulWidget {
-  const PageAuthentification({super.key});
+class AuthPage extends StatefulWidget {
+  const AuthPage({super.key});
 
   @override
-  State<PageAuthentification> createState() => _PageAuthentificationState();
+  State<AuthPage> createState() => _PageAuthentificationState();
 }
 
-class _PageAuthentificationState extends State<PageAuthentification> with SingleTickerProviderStateMixin {
+class _PageAuthentificationState extends State<AuthPage> with SingleTickerProviderStateMixin {
   late TabController _tabController;
 
   @override
@@ -57,8 +57,8 @@ class _PageAuthentificationState extends State<PageAuthentification> with Single
                   child: TabBarView(
                     controller: _tabController,
                     children: const [
-                      FormulaireConnexion(),
-                      FormulaireInscription(),
+                      ConnexionForm(),
+                      InscriptionForm(),
                     ],
                   ),
                 ),

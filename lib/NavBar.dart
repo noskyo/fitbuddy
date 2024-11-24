@@ -18,6 +18,7 @@ class _BottomNavBarState extends State<NavBar> {
     _selectedIndex = index;
   }
 
+  /// Changer de page lorsque l'icone est selectionné
   void _onItemTapped(int index, BuildContext context) {
     setIndexState(index);
 

@@ -1,26 +1,38 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:superfitbuddy/Feed/FeedPage.dart';
 
-class FormulaireConnexion extends StatelessWidget {
-  const FormulaireConnexion({super.key});
+class ConnexionForm extends StatelessWidget {
+  const ConnexionForm({super.key});
 
   @override
   Widget build(BuildContext context) {
     final TextEditingController emailController = TextEditingController();
     final TextEditingController passwordController = TextEditingController();
 
-    Future<void> connexion() async {
+    // Fonction de Connexion
+    Future<void> connexion(BuildContext context) async {
       try {
+        // Tentative de Connexion avec Firebase
         await FirebaseAuth.instance.signInWithEmailAndPassword(
           email: emailController.text.trim(),
           password: passwordController.text.trim(),
         );
+
+        // Affichage d'un message de succès
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Connexion réussie !')),
         );
+
+        // Naviguer vers la page FeedPage après une Connexion réussie
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => FeedPage()),
+        );
       } on FirebaseAuthException catch (e) {
+        // Gestion des erreurs de Connexion
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(e.message ?? 'Erreur de connexion')),
+          SnackBar(content: Text(e.message ?? 'Erreur de Connexion')),
         );
       }
     }
@@ -48,7 +60,8 @@ class FormulaireConnexion extends StatelessWidget {
           ),
           const SizedBox(height: 20),
           ElevatedButton(
-            onPressed: connexion,
+            // Encapsuler l'appel dans une fonction anonyme
+            onPressed: () => connexion(context),
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.deepPurple,
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
