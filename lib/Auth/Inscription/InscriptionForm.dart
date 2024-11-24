@@ -1,51 +1,24 @@
 import 'package:flutter/material.dart';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../../Feed/FeedPage.dart';
+import 'package:superfitbuddy/Homepage/homepage.dart';
 
 class InscriptionForm extends StatefulWidget {
   const InscriptionForm({super.key});
 
   @override
-  State<InscriptionForm> createState() => _FormulaireInscriptionState();
+  State<InscriptionForm> createState() => _InscriptionFormState();
 }
 
-class _FormulaireInscriptionState extends State<InscriptionForm> {
-  final TextEditingController prenomController = TextEditingController();
-  final TextEditingController nomController = TextEditingController();
+class _InscriptionFormState extends State<InscriptionForm> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController confirmPasswordController = TextEditingController();
-  final TextEditingController dateNaissanceController = TextEditingController();
-  String sexe = "Homme";
-  DateTime? dateNaissance;
-
-  Future<void> _selectDateNaissance() async {
-    final DateTime? picked = await showDatePicker(
-      context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime(1900),
-      lastDate: DateTime.now(),
-    );
-    if (picked != null) {
-      setState(() {
-        dateNaissance = picked;
-        dateNaissanceController.text = "${picked.day}/${picked.month}/${picked.year}";
-      });
-    }
-  }
 
   Future<void> inscrire() async {
     if (passwordController.text != confirmPasswordController.text) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Les mots de passe ne correspondent pas !')),
-      );
-      return;
-    }
-    if (dateNaissance == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Veuillez sélectionner votre date de naissance.')),
       );
       return;
     }
@@ -55,27 +28,24 @@ class _FormulaireInscriptionState extends State<InscriptionForm> {
         password: passwordController.text.trim(),
       );
 
-      final user = userCredential.user;
-      if (user != null) {
-        await FirebaseFirestore.instance.collection('users').doc(user.uid).set({
-          'prenom': prenomController.text.trim(),
-          'nom': nomController.text.trim(),
-          'courriel': user.email,
-          'sexe': sexe,
-          'dateNaissance': dateNaissance!.toIso8601String(),
-          'createdAt': DateTime.now(),
-        });
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Compte créé avec succès !')),
-        );
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => FeedPage()),
-        );
-      }
-    } on FirebaseAuthException catch (e) {
+      // Sauvegarder les données utilisateur dans Firestore
+      await FirebaseFirestore.instance.collection('users').doc(userCredential.user!.uid).set({
+        'email': emailController.text.trim(),
+        'createdAt': DateTime.now(),
+      });
+
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(e.message ?? 'Erreur lors de la création du compte')),
+        const SnackBar(content: Text('Inscription réussie !')),
+      );
+
+      // Redirigez vers HomePageWidget
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) =>  HomePageWidget()),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Erreur : ${e.toString()}')),
       );
     }
   }
@@ -87,49 +57,9 @@ class _FormulaireInscriptionState extends State<InscriptionForm> {
       child: Column(
         children: [
           TextField(
-            controller: prenomController,
-            decoration: InputDecoration(
-              labelText: 'Prénom',
-              border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-            ),
-          ),
-          const SizedBox(height: 20),
-          TextField(
-            controller: nomController,
-            decoration: InputDecoration(
-              labelText: 'Nom',
-              border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-            ),
-          ),
-          const SizedBox(height: 20),
-          TextField(
             controller: emailController,
             decoration: InputDecoration(
               labelText: 'Adresse courriel',
-              border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-            ),
-          ),
-          const SizedBox(height: 20),
-          DropdownButtonFormField<String>(
-            value: sexe,
-            onChanged: (value) => setState(() {
-              sexe = value!;
-            }),
-            items: const [
-              DropdownMenuItem(value: "Homme", child: Text("Homme")),
-              DropdownMenuItem(value: "Femme", child: Text("Femme")),
-              DropdownMenuItem(value: "Autre", child: Text("Autre")),
-            ],
-            decoration: const InputDecoration(labelText: 'Sexe'),
-          ),
-          const SizedBox(height: 20),
-          TextField(
-            controller: dateNaissanceController,
-            readOnly: true,
-            onTap: _selectDateNaissance,
-            decoration: InputDecoration(
-              labelText: 'Date de naissance',
-              hintText: "JJ/MM/AAAA",
               border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
             ),
           ),
