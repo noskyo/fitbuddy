@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:superfitbuddy/Feed/FeedPage.dart';
-import 'package:superfitbuddy/main.dart';
 import 'Profile/ProfilePage.dart';
 import 'Map/MapPage.dart';
 
 class NavBar extends StatefulWidget {
-  const NavBar({super.key});
+  const NavBar({super.key, required this.PageName});
+
+  final String PageName;
 
   @override
   State<NavBar> createState() => _BottomNavBarState();
@@ -14,65 +15,123 @@ class NavBar extends StatefulWidget {
 class _BottomNavBarState extends State<NavBar> {
   int _selectedIndex = 0;
 
-  void setIndexState(int index) {
-    _selectedIndex = index;
+  // Colors for selected and unselected items
+  // final Color _defaultUnselectedColor = Colors.blue;
+  // final Color _selectedColor = Colors.orange;
+
+  // Define the navigation items
+  late List<BottomNavigationBarItem> _navBarItems;
+
+  // // Define the colors for each item
+  // late List<Color> _iconColors;
+
+  late final Color _iconColor = Colors.pink;
+
+  final List<String> _labelNames =  ['Activité', 'Carte', 'Profil'];
+
+  // Define the corresponding pages
+  final List<Widget> _pages = [
+    FeedPage(),
+    InteractiveMap(),
+    ProfilePage(),
+  ];
+
+  final List<IconData> _icons = [
+    Icons.import_contacts,
+    Icons.map,
+    Icons.supervised_user_circle
+  ];
+
+  @override
+  void initState() { // #2 (#1 lorsque ouverture)
+    super.initState();
+    print("initState");
+
+    // Initialize icon colors
+    // _iconColors = List.filled(
+    //     3, _defaultUnselectedColor); // Set all to unselected initially
+
+    // Initialize navigation items
+
+    // _updateNavBarItems();
   }
 
-  /// Changer de page lorsque l'icone est selectionné
-  void _onItemTapped(int index, BuildContext context) {
-    setIndexState(index);
+  void _updateNavBarItems() {
+    print("_updateNavBarItems");
+    // Update the navigation items based on the colors
+    _navBarItems = List.generate(
+      _labelNames.length,
+      (index) => BottomNavigationBarItem(
+        icon: Icon(_icons[index],
+            color:
+            ((_labelNames[index] == widget.PageName) ? Colors.purple : _iconColor)),
+            // Colors.cyan),
+        label: _labelNames[index], // Labels for each item
+      ),
+    );
+  }
 
-    switch (index) {
-      case 0:
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) =>  MyApp()),
-        );
-        break;
-      case 1:
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => FeedPage()),
-        );
-        break;
-      case 2:
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => InteractiveMap()),
-        );
-        break;
-      case 3:
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => ProfilePage()),
-        );
-        break;
-    }
+  //  List<BottomNavigationBarItem> _updateNavBarItems2() {
+  //    print("_updateNavBarItems2");
+  //
+  //    // Update the navigation items based on the colors
+  //   _navBarItems = List.generate(
+  //     _labelNames.length,
+  //         (index) => BottomNavigationBarItem(
+  //       icon: Icon(_icons[index],
+  //           color:
+  //           ((_labelNames[index] == widget.PageName) ? Colors.purple :_iconColor)),
+  //       // Colors.cyan),
+  //       label: _labelNames[index], // Labels for each item
+  //     ),
+  //   );
+  //
+  //   return  _navBarItems;
+  // }
+
+  void setIndexState(int index) {
+    print("setIndexState");
+
+    // setState(() {
+    //   _selectedIndex = index;
+    //
+    //   // Update colors for all items
+    //   _iconColors =
+    //       _iconColors.map((color) => _defaultUnselectedColor).toList();
+    //   _iconColors[index] = _selectedColor;
+    //
+    //   // Refresh the navigation items
+    //   // _updateNavBarItems();
+    // });
+  }
+
+  void _onItemTapped(int index) { // #1
+      _selectedIndex = index;
+      _updateNavBarItems();
+
+
+    // setIndexState(index);
+    print("_onItemTapped");
+
+    print(widget.PageName);
+    _selectedIndex = index;
+
+    // Navigate to the corresponding page
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => _pages[index]),
+    );
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) { // #2
+
+    print("Build");
     return BottomNavigationBar(
       currentIndex: _selectedIndex, // The current selected index
-      onTap: (index) => _onItemTapped(index, context), // Handle item tap
-      selectedItemColor: Colors.orange,
-      unselectedItemColor: Colors.blue,
-      showUnselectedLabels: true, // Afficher les titres des autres icones
-      items: const <BottomNavigationBarItem>[
-        BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Accueil'
-        ),
-        BottomNavigationBarItem(
-            icon: Icon(Icons.ad_units),
-            label: 'Activité'
-        ),
-        BottomNavigationBarItem(
-            icon: Icon(Icons.map),
-            label: 'Carte',
-            backgroundColor: Colors.blue),
-        BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Profil'),
-      ],
+      onTap: _onItemTapped, // Handle item tap
+      showUnselectedLabels: true, // Show labels for unselected items
+      items: _navBarItems, // Use the updated navigation items
     );
   }
 }

@@ -256,7 +256,7 @@ class _InteractiveMapState extends State<InteractiveMap> {
           ],
         ),
       ),
-      bottomNavigationBar: const NavBar(),
+      bottomNavigationBar: const NavBar(PageName: "Carte"),
     );
   }
 }

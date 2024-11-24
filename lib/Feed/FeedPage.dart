@@ -3,7 +3,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 
-import '../navbar.dart';
+import '../NavBar.dart';
 import 'EventCreation.dart';
 import 'Moreinfo.dart'; // Import Moreinfo.dart
 
@@ -180,7 +180,7 @@ class _FeedPageState extends State<FeedPage> {
           ],
         ),
       ),
-      bottomNavigationBar: const NavBar(),
+      bottomNavigationBar:  const NavBar(PageName : "Activité") ,
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.push(

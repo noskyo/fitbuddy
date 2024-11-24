@@ -9,6 +9,7 @@ import '../NavBar.dart';
 class ProfilePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Mon Profil'),
@@ -43,7 +44,7 @@ class ProfilePage extends StatelessWidget {
           ],
         ),
       ),
-      bottomNavigationBar: const NavBar(),
+      bottomNavigationBar:  NavBar(PageName: "Profil") ,
     );
   }
 }
