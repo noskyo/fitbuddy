@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:superfitbuddy/Feed/FeedPage.dart';
+import 'package:superfitbuddy/Homepage/homepage.dart';
 
 class ConnexionForm extends StatelessWidget {
   const ConnexionForm({super.key});
@@ -10,29 +10,25 @@ class ConnexionForm extends StatelessWidget {
     final TextEditingController emailController = TextEditingController();
     final TextEditingController passwordController = TextEditingController();
 
-    // Fonction de Connexion
     Future<void> connexion(BuildContext context) async {
       try {
-        // Tentative de Connexion avec Firebase
         await FirebaseAuth.instance.signInWithEmailAndPassword(
           email: emailController.text.trim(),
           password: passwordController.text.trim(),
         );
 
-        // Affichage d'un message de succès
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Connexion réussie !')),
         );
 
-        // Naviguer vers la page FeedPage après une Connexion réussie
+        // Redirigez vers HomePageWidget
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => FeedPage()),
+          MaterialPageRoute(builder: (context) =>  HomePageWidget()),
         );
-      } on FirebaseAuthException catch (e) {
-        // Gestion des erreurs de Connexion
+      } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(e.message ?? 'Erreur de Connexion')),
+          SnackBar(content: Text('Erreur : ${e.toString()}')),
         );
       }
     }
@@ -55,12 +51,10 @@ class ConnexionForm extends StatelessWidget {
             decoration: InputDecoration(
               labelText: 'Mot de passe',
               border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-              suffixIcon: const Icon(Icons.visibility_off),
             ),
           ),
           const SizedBox(height: 20),
           ElevatedButton(
-            // Encapsuler l'appel dans une fonction anonyme
             onPressed: () => connexion(context),
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.deepPurple,

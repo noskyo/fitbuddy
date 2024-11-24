@@ -10,12 +10,14 @@ class HomePageWidget extends StatelessWidget {
     },
     {
       'title': 'Citation du jour',
-      'description': '“Le succès n’est pas final, l’échec n’est pas fatal : c’est le courage de continuer qui compte.”',
+      'description':
+      '“Le succès n’est pas final, l’échec n’est pas fatal : c’est le courage de continuer qui compte.”',
       'image': 'assets/images/montagne.png',
     },
     {
       'title': 'Aliment du jour',
-      'description': 'Ajoutez une poignée de noix dans vos repas pour un boost d’énergie !',
+      'description':
+      'Ajoutez une poignée de noix dans vos repas pour un boost d’énergie !',
       'image': 'assets/images/nuts.png',
     },
   ];
@@ -26,7 +28,7 @@ class HomePageWidget extends StatelessWidget {
       body: Container(
         decoration: const BoxDecoration(
           gradient: LinearGradient(
-            colors: [Colors.white, Color(0xFFE8EAF6)], // Couleurs du dégradé
+            colors: [Colors.white, Color(0xFFE8EAF6)], // Dégradé
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
           ),
@@ -72,7 +74,6 @@ class HomePageWidget extends StatelessWidget {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              // Charger l'image locale avec un border radius
                               ClipRRect(
                                 borderRadius: const BorderRadius.vertical(
                                   top: Radius.circular(20.0),
@@ -84,8 +85,6 @@ class HomePageWidget extends StatelessWidget {
                                   fit: BoxFit.contain,
                                 ),
                               ),
-
-                              // Partie Texte
                               Padding(
                                 padding: const EdgeInsets.symmetric(
                                   vertical: 16.0,
@@ -123,8 +122,6 @@ class HomePageWidget extends StatelessWidget {
                 }).toList(),
               ),
             ),
-
-            // Bouton amélioré
             Padding(
               padding: const EdgeInsets.only(top: 20.0, bottom: 20.0),
               child: ElevatedButton(
@@ -133,7 +130,7 @@ class HomePageWidget extends StatelessWidget {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(30),
                   ),
-                  backgroundColor: const Color(0xFF6C63FF), // Couleur personnalisée
+                  backgroundColor: const Color(0xFF6C63FF),
                   elevation: 5,
                   shadowColor: Colors.black.withOpacity(0.2),
                 ),
