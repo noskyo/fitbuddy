@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:superfitbuddy/Feed/FeedPage.dart';
 import 'package:superfitbuddy/main.dart';
-import 'Map/MapPage.dart';
+import 'package:superfitbuddy/Map/MapPage.dart';
 import 'Profile/ProfilePage.dart';
-import 'Profile/HelloWorldPage.dart'; // Import the new page
 
 class NavBar extends StatefulWidget {
   const NavBar({super.key});
@@ -49,12 +48,6 @@ class _BottomNavBarState extends State<NavBar> {
           MaterialPageRoute(builder: (context) => ProfilePage()),
         );
         break;
-      case 4: // Add the HelloWorldPage as a new index
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => HelloWorldPage()),
-        );
-        break;
     }
   }
 
@@ -75,11 +68,6 @@ class _BottomNavBarState extends State<NavBar> {
           backgroundColor: Colors.blue,
         ),
         BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profil'),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.code),
-          label: 'Hello',
-          backgroundColor: Colors.green,
-        ), // New item for HelloWorldPage
       ],
     );
   }

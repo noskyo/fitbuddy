@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'editable_field.dart';
+import 'package:superfitbuddy/pages/page_authentification.dart'; // Replace with actual import path for your page
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
@@ -11,50 +11,54 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  bool isEditing = false;
   bool isLoading = true;
+  bool isEditing = false;
 
-  // Store user data that will be fetched from Firestore
-  Map<String, dynamic> userData = {
-    'courriel': '',
-    'prenom': '',
-    'nom': '',
-    'sexe': '',
-    'dateNaissance': '',
-  };
+  String? userId;
+  String courriel = '';
+  String prenom = '';
+  String nom = '';
 
-  // Function to fetch user data from Firestore using the authenticated user's UID
-  void fetchUserData() async {
+  late TextEditingController courrielController;
+  late TextEditingController prenomController;
+  late TextEditingController nomController;
+
+  // Fetch user data from Firestore
+  Future<void> fetchUserData() async {
     try {
-      // Get the current user ID from FirebaseAuth
       User? user = FirebaseAuth.instance.currentUser;
 
       if (user != null) {
-        // Fetch data from Firestore using the UID of the logged-in user
+        userId = user.uid;
+
         DocumentSnapshot userDoc = await FirebaseFirestore.instance
             .collection('users')
-            .doc(user.uid)  // Fetch the document with the same UID as the logged-in user
+            .doc(user.uid)
             .get();
 
         if (userDoc.exists) {
-          // If the document exists, update the state with the user's data
           setState(() {
-            userData = userDoc.data() as Map<String, dynamic>;
+            prenom = userDoc.get('prenom') ?? 'N/A';
+            nom = userDoc.get('nom') ?? 'N/A';
+            courriel = user.email ?? 'No details';
+
+            prenomController.text = prenom;
+            nomController.text = nom;
+            courrielController.text = courriel;
+
             isLoading = false;
           });
         } else {
-          // Handle case where the user document doesn't exist in the Firestore database
           setState(() {
             isLoading = false;
           });
-          print("User not found in Firestore");
+          print("User document not found");
         }
       } else {
-        // Handle case when the user is not authenticated
         setState(() {
           isLoading = false;
         });
-        print("No user logged in");
+        print("No user is logged in");
       }
     } catch (e) {
       setState(() {
@@ -64,84 +68,137 @@ class _ProfilePageState extends State<ProfilePage> {
     }
   }
 
+  // Save updated data to Firestore
+  Future<void> saveUserData() async {
+    try {
+      if (userId != null) {
+        // Update Firestore with new values
+        await FirebaseFirestore.instance.collection('users').doc(userId).update({
+          'prenom': prenomController.text,
+          'nom': nomController.text,
+        });
+
+        // If email is changed, update it via FirebaseAuth
+        if (courrielController.text != courriel) {
+          User? user = FirebaseAuth.instance.currentUser;
+          if (user != null) {
+            await user.updateEmail(courrielController.text); // Update email in FirebaseAuth
+            setState(() {
+              courriel = courrielController.text;
+            });
+          }
+        }
+
+        setState(() {
+          prenom = prenomController.text;
+          nom = nomController.text;
+          courriel = courrielController.text;
+          isEditing = false;
+        });
+      }
+    } catch (e) {
+      print("Error saving user data: $e");
+    }
+  }
+
+  // Log out the user and redirect to Auth screen
+  Future<void> logOut() async {
+    await FirebaseAuth.instance.signOut();
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => PageAuthentification()), // Use your custom auth page
+    );
+  }
+
   @override
   void initState() {
     super.initState();
-    fetchUserData();  // Fetch the user data as soon as the profile page is initialized
+    prenomController = TextEditingController();
+    nomController = TextEditingController();
+    courrielController = TextEditingController();
+    fetchUserData();
+  }
+
+  @override
+  void dispose() {
+    prenomController.dispose();
+    nomController.dispose();
+    courrielController.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Profile Page')),
+      appBar: AppBar(
+        title: const Text('Profile'),
+        backgroundColor: Colors.blueAccent,
+        actions: [
+          if (!isEditing)
+            IconButton(
+              icon: const Icon(Icons.edit),
+              onPressed: () {
+                setState(() {
+                  isEditing = true;
+                });
+              },
+            ),
+          if (isEditing)
+            IconButton(
+              icon: const Icon(Icons.save),
+              onPressed: saveUserData,
+            ),
+        ],
+      ),
       body: isLoading
-          ? Center(child: CircularProgressIndicator())
-          : SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
+          ? Center(
+        child: CircularProgressIndicator(
+          valueColor: AlwaysStoppedAnimation<Color>(Colors.blueAccent),
+        ),
+      )
+          : Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Editable Field for Email
-              EditableField(
-                label: 'Email',
-                fieldKey: 'courriel',
-                userData: userData,
-                isEditing: isEditing,
+              Text(
+                'User ID: ${userId ?? "No details"}',
+                style: const TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black87,
+                ),
               ),
-              // Editable Field for First Name
-              EditableField(
-                label: 'First Name',
-                fieldKey: 'prenom',
-                userData: userData,
-                isEditing: isEditing,
-              ),
-              // Editable Field for Last Name
-              EditableField(
-                label: 'Last Name',
-                fieldKey: 'nom',
-                userData: userData,
-                isEditing: isEditing,
-              ),
-              // Editable Field for Gender
-              EditableField(
-                label: 'Gender',
-                fieldKey: 'sexe',
-                userData: userData,
-                isEditing: isEditing,
-              ),
-              // Editable Field for Date of Birth
-              EditableField(
-                label: 'Date of Birth',
-                fieldKey: 'dateNaissance',
-                userData: userData,
-                isEditing: isEditing,
-              ),
-              SizedBox(height: 24),
-              // Save button (Only visible when editing)
+              const SizedBox(height: 24),
+              buildEditableField('Email', courrielController, Icons.email),
+              const SizedBox(height: 16),
+              buildEditableField('First Name', prenomController, Icons.person),
+              const SizedBox(height: 16),
+              buildEditableField('Last Name', nomController, Icons.person),
+              const SizedBox(height: 32),
               if (isEditing)
                 Center(
                   child: ElevatedButton(
-                    onPressed: () {
-                      // Save logic to update Firestore can go here
-                      print("Save Changes");
-                      setState(() {
-                        isEditing = false;  // Toggle back to non-edit mode after saving
-                      });
-                    },
-                    child: Text('Save Changes'),
+                    onPressed: saveUserData,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.blueAccent,
+                      padding: EdgeInsets.symmetric(horizontal: 32, vertical: 12),
+                      textStyle: TextStyle(fontSize: 18),
+                    ),
+                    child: const Text('Save Changes'),
                   ),
                 ),
-              SizedBox(height: 16),
-              // Edit button to toggle edit mode
+              const SizedBox(height: 32),
               Center(
                 child: ElevatedButton(
-                  onPressed: () {
-                    setState(() {
-                      isEditing = !isEditing; // Toggle edit mode
-                    });
-                  },
-                  child: Text(isEditing ? 'Cancel' : 'Edit Profile'),
+                  onPressed: logOut,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.red, // Red color for logout
+                    padding: EdgeInsets.symmetric(horizontal: 32, vertical: 12),
+                    textStyle: TextStyle(fontSize: 18),
+                  ),
+                  child: const Text('Log Out'),
                 ),
               ),
             ],
@@ -150,56 +207,34 @@ class _ProfilePageState extends State<ProfilePage> {
       ),
     );
   }
-}
 
-class EditableField extends StatefulWidget {
-  final String label;
-  final String fieldKey;
-  final Map<String, dynamic> userData;
-  final bool isEditing;
-
-  const EditableField({
-    Key? key,
-    required this.label,
-    required this.fieldKey,
-    required this.userData,
-    required this.isEditing,
-  }) : super(key: key);
-
-  @override
-  _EditableFieldState createState() => _EditableFieldState();
-}
-
-class _EditableFieldState extends State<EditableField> {
-  late TextEditingController controller;
-
-  @override
-  void initState() {
-    super.initState();
-    controller = TextEditingController(text: widget.userData[widget.fieldKey]?.toString());
-  }
-
-  @override
-  void dispose() {
-    controller.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
+  // Helper method to create editable fields
+  Widget buildEditableField(String label, TextEditingController controller, IconData icon) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(widget.label, style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-        SizedBox(height: 8),
-        widget.isEditing
+        Text(
+          label,
+          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        ),
+        const SizedBox(height: 8),
+        isEditing
             ? TextField(
           controller: controller,
-          decoration: InputDecoration(border: OutlineInputBorder()),
+          decoration: InputDecoration(
+            prefixIcon: Icon(icon, color: Colors.blueAccent),
+            border: OutlineInputBorder(),
+            hintText: 'Enter your $label',
+            filled: true,
+            fillColor: Colors.grey[200],
+          ),
         )
-            : Text(widget.userData[widget.fieldKey]?.toString() ?? 'N/A'),
-        SizedBox(height: 16),
+            : Text(
+          controller.text.isEmpty ? 'No details available' : controller.text,
+          style: const TextStyle(fontSize: 16),
+        ),
       ],
     );
   }
 }
+
