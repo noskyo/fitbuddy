@@ -13,33 +13,65 @@ class InteractiveMap extends StatefulWidget {
 
 class _InteractiveMapState extends State<InteractiveMap> {
   final MapController _mapController = MapController();
-
+  List<Marker> _markers = [];
   double _currentZoom = 13.0;
   LatLng _currentCenter = LatLng(45.5017, -73.5673); // Montréal (par défaut)
 
   @override
   void initState() {
     super.initState();
+    _loadMarkers(); // Charger les marqueurs depuis Firestore
+  }
 
-    // Écoute des événements de la carte
-    _mapController.mapEventStream.listen((event) {
-      if (event is MapEventMove) {
-        setState(() {
-          _currentCenter = event.center; // Met à jour le centre
-          _currentZoom = event.zoom;    // Met à jour le zoom
-        });
-      }
+  Future<void> _loadMarkers() async {
+    List<Map<String, dynamic>> activityPoints = await fetchActivityPoints();
+    setState(() {
+      _markers = activityPoints.map((point) {
+        return Marker(
+          point: LatLng(point['latitude'], point['longitude']),
+          width: 80,
+          height: 80,
+          builder: (context) => GestureDetector(
+            onTap: () {
+              _showMarkerDetails(point);
+            },
+            child: const Icon(
+              Icons.location_pin,
+              size: 40,
+              color: Colors.red,
+            ),
+          ),
+        );
+      }).toList();
     });
   }
 
-  // Fonction pour changer le zoom
-  void _changeZoom(double zoomChange) {
-    setState(() {
-      _currentZoom += zoomChange;
-      if (_currentZoom < 1.0) _currentZoom = 1.0; // Limite minimale
-      if (_currentZoom > 18.0) _currentZoom = 18.0; // Limite maximale
-      _mapController.move(_currentCenter, _currentZoom);
-    });
+  void _showMarkerDetails(Map<String, dynamic> point) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text(point['name']),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text("Description: ${point['description']}"),
+              const SizedBox(height: 10),
+              Text("Latitude: ${point['latitude']}"),
+              Text("Longitude: ${point['longitude']}"),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('Fermer'),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -47,12 +79,11 @@ class _InteractiveMapState extends State<InteractiveMap> {
     return Scaffold(
       body: Stack(
         children: [
-          // Carte FlutterMap
           FlutterMap(
             mapController: _mapController,
             options: MapOptions(
-              center: _currentCenter, // Définit le centre initial
-              zoom: _currentZoom,    // Définit le zoom initial
+              center: _currentCenter,
+              zoom: _currentZoom,
             ),
             children: [
               TileLayer(
@@ -60,62 +91,41 @@ class _InteractiveMapState extends State<InteractiveMap> {
                 subdomains: ['a', 'b', 'c'],
                 userAgentPackageName: 'com.example.flutter_map',
               ),
-              MarkerLayer(
-                markers: genererMarqueurs(points),
-              ),
+              MarkerLayer(markers: _markers),
             ],
           ),
-
-          // Boutons pour ajuster le zoom
           Positioned(
             bottom: 40,
             right: 20,
             child: Column(
               children: [
                 ElevatedButton(
-                  onPressed: () => _changeZoom(3.0),
+                  onPressed: () {
+                    setState(() => _currentZoom = _currentZoom + 1);
+                    _mapController.move(_currentCenter, _currentZoom);
+                  },
                   child: const Icon(Icons.zoom_in),
                 ),
                 const SizedBox(height: 10),
                 ElevatedButton(
-                  onPressed: () => _changeZoom(-3.0),
+                  onPressed: () {
+                    setState(() => _currentZoom = _currentZoom - 1);
+                    _mapController.move(_currentCenter, _currentZoom);
+                  },
                   child: const Icon(Icons.zoom_out),
                 ),
               ],
             ),
           ),
-
-
-
-          //retour a l'écran précédent
           Positioned(
             top: 40,
             left: 10,
             child: FloatingActionButton(
-                onPressed: ()
-              {
+              onPressed: () {
                 Navigator.pop(context);
               },
-            backgroundColor:  Colors.black,
-            child: const Icon(Icons.arrow_back, color: Colors.white,),)
-          ),
-
-          //ajout d'une activité
-          Positioned(
-            bottom: 100,
-            left: 0,
-            right: 0,
-            child: Center(
-              child: ElevatedButton(
-                onPressed: () {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text("Création d'une activité"),
-                    ),
-                  );
-                },
-                child: const Text("Ajouter une activité"), // Ajout d'un texte pour le bouton
-              ),
+              backgroundColor: Colors.black,
+              child: const Icon(Icons.arrow_back, color: Colors.white),
             ),
           ),
         ],
