@@ -1,20 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'firebase_options.dart';
-import 'Feed/InitialFeed.dart'; // Correct import path
+import 'Test/firebaseCalls.dart'; // Correct the import path to where FirebaseCallsPage is located
+import 'package:firebase_core/firebase_core.dart'; // Import Firebase
+import 'Feed/InitialFeed.dart'; // Import InitialFeed from the Feed folder
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
-  runApp(const MyApp());
+  await Firebase.initializeApp(); // Ensure Firebase is initialized before running the app
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -25,58 +20,20 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const FirebaseTestPage(title: 'Firebase Test Page'),
+      home: MyHomePage(),
     );
   }
 }
 
-class FirebaseTestPage extends StatefulWidget {
-  const FirebaseTestPage({super.key, required this.title});
-
-  final String title;
-
-  @override
-  State<FirebaseTestPage> createState() => _FirebaseTestPageState();
-}
-
-class _FirebaseTestPageState extends State<FirebaseTestPage> {
+class MyHomePage extends StatelessWidget {
   String _status = "Testing Firebase connection...";
-
-  @override
-  void initState() {
-    super.initState();
-    _testFirebaseConnection();
-  }
-
-  Future<void> _testFirebaseConnection() async {
-    try {
-      // Test Firestore connection
-      final testDoc = FirebaseFirestore.instance.collection('test').doc('testDoc');
-      await testDoc.set({'timestamp': DateTime.now()});
-      final snapshot = await testDoc.get();
-
-      if (snapshot.exists) {
-        setState(() {
-          _status = "Firebase connection successful!";
-        });
-      } else {
-        setState(() {
-          _status = "Firebase connection failed: No document found.";
-        });
-      }
-    } catch (e) {
-      setState(() {
-        _status = "Firebase connection failed: $e";
-      });
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(widget.title),
+        title: const Text('My Home Page'),
       ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -87,12 +44,12 @@ class _FirebaseTestPageState extends State<FirebaseTestPage> {
             textAlign: TextAlign.center,
             style: Theme.of(context).textTheme.headlineMedium,
           ),
-          const SizedBox(height: 20), // Add spacing between the text and the button
+          const SizedBox(height: 20),
           ElevatedButton(
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => HomePage()), // Navigate to InitialFeed
+                MaterialPageRoute(builder: (context) => InitialFeed()), // Navigate to InitialFeed page
               );
             },
             style: ElevatedButton.styleFrom(
