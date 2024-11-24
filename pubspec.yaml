@@ -18,6 +18,7 @@ dependencies:
   flutter_map: ^4.0.0
   flutter_map_marker_popup: ^5.1.0
   latlong2: ^0.8.1
+  firebase_auth: ^5.3.3
 
 dev_dependencies:
   flutter_test:
