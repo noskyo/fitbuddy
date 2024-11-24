@@ -22,7 +22,7 @@ android {
     defaultConfig {
         applicationId = "com.example.superfitbuddy"
         minSdk = 23 // Causait des problemes
-        targetSdk = flutter.targetSdkVersion
+        targetSdk = 33//chat gpt??
         versionCode = flutter.versionCode
         versionName = flutter.versionName
     }
