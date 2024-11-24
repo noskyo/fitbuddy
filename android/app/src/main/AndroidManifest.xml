@@ -12,6 +12,10 @@
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
 
+        <!-- TODO: Add your Google Maps API key here -->
+        <meta-data android:name="com.google.android.geo.API_KEY"
+            android:value="7FGlLp9pSLjtTP2z2v-xxlT8msA=" />
+
         <!-- Main activity -->
         <activity
             android:name=".MainActivity"
@@ -39,6 +43,12 @@
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
+
+        <!-- Added API Key for Google Maps -->
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="${MAPS_API_KEY}" />
+
     </application>
 
     <!-- Queries required for Flutter plugins -->

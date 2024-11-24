@@ -134,7 +134,10 @@ class _FeedPageState extends State<FeedPage> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => MoreInfo(eventDetails: event),
+                              builder: (context) => MoreInfo(
+                                eventDetails: event,
+                                distance: eventDistance,
+                              ),
                             ),
                           );
                         },
