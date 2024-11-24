@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import '../firebase_options.dart';
-import '../NavBar.dart';
 
+import '../NavBar.dart';
 
 // Page Profile
 class ProfilePage extends StatelessWidget {
@@ -20,7 +17,8 @@ class ProfilePage extends StatelessWidget {
             // Informations du profil
             CircleAvatar(
               radius: 50,
-              backgroundImage: NetworkImage('https://via.placeholder.com/150'), // Image de profil
+              backgroundImage: NetworkImage(
+                  'https://via.placeholder.com/150'), // Image de profil
             ),
             SizedBox(height: 20),
             Text(
@@ -38,8 +36,6 @@ class ProfilePage extends StatelessWidget {
               style: TextStyle(fontSize: 18),
             ),
             SizedBox(height: 20),
-
-
           ],
         ),
       ),

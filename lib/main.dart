@@ -1,15 +1,12 @@
-import 'package:flutter/material.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/material.dart';
 import 'package:superfitbuddy/Feed/FeedPage.dart';
 import 'package:superfitbuddy/pages/page_authentification.dart';
+
 import 'firebase_options.dart';
-import 'NavBar.dart';
-import 'Map/MapPage.dart';
-import 'Startup.dart';
 
-
-void main() async{
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
@@ -18,32 +15,26 @@ void main() async{
 }
 
 class MyApp extends StatelessWidget {
-
-
-
   @override
   Widget build(BuildContext context) {
-    bool resultat = false; // false : Initialisation , true : Deja connectee --> VERIFIER SI DEJA CONNECTE
-
+    bool resultat =
+        false; // false : Initialisation , true : Deja connectee --> VERIFIER SI DEJA CONNECTE
 
     _FirebaseTestPageState()._testFirebaseConnection();
 
-    if (resultat){
-
-    } else {
-
-    }
+    if (resultat) {
+    } else {}
 
     // Compte enregistré
     // Connexion ou creation de compte
 
-
     return MaterialApp(
-      home: resultat ? FeedPage() : PageAuthentification(), // La page qui s'affiche au démarrage
+      home: resultat
+          ? FeedPage()
+          : PageAuthentification(), // La page qui s'affiche au démarrage
     );
   }
 }
-
 
 class _FirebaseTestPageState {
   String _status = "Testing Firebase connection...";
@@ -56,19 +47,19 @@ class _FirebaseTestPageState {
 
   void _testFirebaseConnection() async {
     try {
-    // Test Firestore connection
-    final testDoc = FirebaseFirestore.instance.collection('test').doc(
-        'testDoc');
-    await testDoc.set({'timestamp': DateTime.now()});
-    final snapshot = await testDoc.get();
+      // Test Firestore connection
+      final testDoc =
+          FirebaseFirestore.instance.collection('test').doc('testDoc');
+      await testDoc.set({'timestamp': DateTime.now()});
+      final snapshot = await testDoc.get();
       if (snapshot.exists) {
         // setState(() {
-          print("Firebase connection successful!");
+        print("Firebase connection successful!");
         //   _status = "Firebase connection successful!";
         // });
       } else {
         // setState(() {
-          print("Firebase connection failed: No document found.") ;
+        print("Firebase connection failed: No document found.");
         // });
       }
     } catch (e) {
@@ -79,21 +70,21 @@ class _FirebaseTestPageState {
     }
   }
 }
-    //   if (snapshot.exists) {
-    //     setState(() {
-    //       _status = "Firebase connection successful!";
-    //     });
-    //   } else {
-    //     setState(() {
-    //       _status = "Firebase connection failed: No document found.";
-    //     });
-    //   }
-    // } catch (e) {
-    //   setState(() {
-    //     _status = "Firebase connection failed: $e";
-    //   });
-    // }
-  // }
+//   if (snapshot.exists) {
+//     setState(() {
+//       _status = "Firebase connection successful!";
+//     });
+//   } else {
+//     setState(() {
+//       _status = "Firebase connection failed: No document found.";
+//     });
+//   }
+// } catch (e) {
+//   setState(() {
+//     _status = "Firebase connection failed: $e";
+//   });
+// }
+// }
 
 //   @override
 //   Widget build(BuildContext context) {

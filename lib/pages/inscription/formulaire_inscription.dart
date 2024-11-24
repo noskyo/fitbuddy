@@ -1,7 +1,6 @@
-import 'package:flutter/material.dart';
-
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 
 class FormulaireInscription extends StatefulWidget {
   const FormulaireInscription({super.key});
@@ -15,7 +14,8 @@ class _FormulaireInscriptionState extends State<FormulaireInscription> {
   final TextEditingController nomController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  final TextEditingController confirmPasswordController = TextEditingController();
+  final TextEditingController confirmPasswordController =
+      TextEditingController();
   final TextEditingController dateNaissanceController = TextEditingController();
   String sexe = "Homme";
   DateTime? dateNaissance;
@@ -30,7 +30,8 @@ class _FormulaireInscriptionState extends State<FormulaireInscription> {
     if (picked != null) {
       setState(() {
         dateNaissance = picked;
-        dateNaissanceController.text = "${picked.day}/${picked.month}/${picked.year}";
+        dateNaissanceController.text =
+            "${picked.day}/${picked.month}/${picked.year}";
       });
     }
   }
@@ -38,18 +39,21 @@ class _FormulaireInscriptionState extends State<FormulaireInscription> {
   Future<void> inscrire() async {
     if (passwordController.text != confirmPasswordController.text) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Les mots de passe ne correspondent pas !')),
+        const SnackBar(
+            content: Text('Les mots de passe ne correspondent pas !')),
       );
       return;
     }
     if (dateNaissance == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Veuillez sélectionner votre date de naissance.')),
+        const SnackBar(
+            content: Text('Veuillez sélectionner votre date de naissance.')),
       );
       return;
     }
     try {
-      final UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      final UserCredential userCredential =
+          await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: emailController.text.trim(),
         password: passwordController.text.trim(),
       );
@@ -70,7 +74,8 @@ class _FormulaireInscriptionState extends State<FormulaireInscription> {
       }
     } on FirebaseAuthException catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(e.message ?? 'Erreur lors de la création du compte')),
+        SnackBar(
+            content: Text(e.message ?? 'Erreur lors de la création du compte')),
       );
     }
   }
@@ -85,7 +90,8 @@ class _FormulaireInscriptionState extends State<FormulaireInscription> {
             controller: prenomController,
             decoration: InputDecoration(
               labelText: 'Prénom',
-              border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+              border:
+                  OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
             ),
           ),
           const SizedBox(height: 20),
@@ -93,7 +99,8 @@ class _FormulaireInscriptionState extends State<FormulaireInscription> {
             controller: nomController,
             decoration: InputDecoration(
               labelText: 'Nom',
-              border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+              border:
+                  OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
             ),
           ),
           const SizedBox(height: 20),
@@ -101,7 +108,8 @@ class _FormulaireInscriptionState extends State<FormulaireInscription> {
             controller: emailController,
             decoration: InputDecoration(
               labelText: 'Adresse courriel',
-              border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+              border:
+                  OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
             ),
           ),
           const SizedBox(height: 20),
@@ -125,7 +133,8 @@ class _FormulaireInscriptionState extends State<FormulaireInscription> {
             decoration: InputDecoration(
               labelText: 'Date de naissance',
               hintText: "JJ/MM/AAAA",
-              border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+              border:
+                  OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
             ),
           ),
           const SizedBox(height: 20),
@@ -134,7 +143,8 @@ class _FormulaireInscriptionState extends State<FormulaireInscription> {
             obscureText: true,
             decoration: InputDecoration(
               labelText: 'Mot de passe',
-              border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+              border:
+                  OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
             ),
           ),
           const SizedBox(height: 20),
@@ -143,7 +153,8 @@ class _FormulaireInscriptionState extends State<FormulaireInscription> {
             obscureText: true,
             decoration: InputDecoration(
               labelText: 'Confirmer le mot de passe',
-              border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+              border:
+                  OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
             ),
           ),
           const SizedBox(height: 20),
@@ -151,7 +162,8 @@ class _FormulaireInscriptionState extends State<FormulaireInscription> {
             onPressed: inscrire,
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.deepPurple,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(30)),
               minimumSize: const Size(double.infinity, 50),
             ),
             child: const Text(

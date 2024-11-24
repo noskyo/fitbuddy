@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
+
 import '../NavBar.dart';
 
 class FeedPage extends StatefulWidget {
@@ -8,13 +9,14 @@ class FeedPage extends StatefulWidget {
   _FeedPageState createState() => _FeedPageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _FeedPageState extends State<FeedPage> {
   Position? _currentPosition;
   String? _currentAddress;
 
   // Reference location (latitude, longitude)
   double referenceLatitude = 40.748817;
-  double referenceLongitude = -73.985428; // Example: Empire State Building (New York)
+  double referenceLongitude =
+      -73.985428; // Example: Empire State Building (New York)
 
   @override
   Widget build(BuildContext context) {
@@ -36,14 +38,16 @@ class _HomePageState extends State<HomePage> {
                 padding: const EdgeInsets.only(top: 10),
                 child: Text(
                   _currentAddress!,
-                  style: const TextStyle(fontSize: 18, fontStyle: FontStyle.italic),
+                  style: const TextStyle(
+                      fontSize: 18, fontStyle: FontStyle.italic),
                 ),
               ),
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: _getCurrentLocation,
               style: ElevatedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
               ),
               child: const Text("Get location"),
             ),
@@ -106,7 +110,7 @@ class _HomePageState extends State<HomePage> {
       Placemark place = placemarks[0];
       setState(() {
         _currentAddress =
-        "${place.locality}, ${place.postalCode}, ${place.country}";
+            "${place.locality}, ${place.postalCode}, ${place.country}";
       });
     } catch (e) {
       print('Error getting address: $e');

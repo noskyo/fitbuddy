@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 
 class FormulaireConnexion extends StatelessWidget {
   const FormulaireConnexion({super.key});
@@ -33,7 +33,8 @@ class FormulaireConnexion extends StatelessWidget {
             controller: emailController,
             decoration: InputDecoration(
               labelText: 'Adresse courriel',
-              border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+              border:
+                  OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
             ),
           ),
           const SizedBox(height: 20),
@@ -42,7 +43,8 @@ class FormulaireConnexion extends StatelessWidget {
             obscureText: true,
             decoration: InputDecoration(
               labelText: 'Mot de passe',
-              border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+              border:
+                  OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
               suffixIcon: const Icon(Icons.visibility_off),
             ),
           ),
@@ -51,7 +53,8 @@ class FormulaireConnexion extends StatelessWidget {
             onPressed: connexion,
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.deepPurple,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(30)),
               minimumSize: const Size(double.infinity, 50),
             ),
             child: const Text(

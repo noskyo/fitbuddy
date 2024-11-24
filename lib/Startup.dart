@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-
-
 class DemarragePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {

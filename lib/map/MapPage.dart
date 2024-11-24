@@ -26,7 +26,7 @@ class _InteractiveMapState extends State<InteractiveMap> {
       if (event is MapEventMove) {
         setState(() {
           _currentCenter = event.center; // Met à jour le centre
-          _currentZoom = event.zoom;    // Met à jour le zoom
+          _currentZoom = event.zoom; // Met à jour le zoom
         });
       }
     });
@@ -52,11 +52,12 @@ class _InteractiveMapState extends State<InteractiveMap> {
             mapController: _mapController,
             options: MapOptions(
               center: _currentCenter, // Définit le centre initial
-              zoom: _currentZoom,    // Définit le zoom initial
+              zoom: _currentZoom, // Définit le zoom initial
             ),
             children: [
               TileLayer(
-                urlTemplate: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+                urlTemplate:
+                    'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
                 subdomains: ['a', 'b', 'c'],
                 userAgentPackageName: 'com.example.flutter_map',
               ),
@@ -85,20 +86,20 @@ class _InteractiveMapState extends State<InteractiveMap> {
             ),
           ),
 
-
-
           //retour a l'écran précédent
           Positioned(
-            top: 40,
-            left: 10,
-            child: FloatingActionButton(
-                onPressed: ()
-              {
-                Navigator.pop(context);
-              },
-            backgroundColor:  Colors.black,
-            child: const Icon(Icons.arrow_back, color: Colors.white,),)
-          ),
+              top: 40,
+              left: 10,
+              child: FloatingActionButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                backgroundColor: Colors.black,
+                child: const Icon(
+                  Icons.arrow_back,
+                  color: Colors.white,
+                ),
+              )),
 
           //ajout d'une activité
           Positioned(
@@ -114,7 +115,8 @@ class _InteractiveMapState extends State<InteractiveMap> {
                     ),
                   );
                 },
-                child: const Text("Ajouter une activité"), // Ajout d'un texte pour le bouton
+                child: const Text(
+                    "Ajouter une activité"), // Ajout d'un texte pour le bouton
               ),
             ),
           ),

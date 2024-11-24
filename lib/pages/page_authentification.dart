@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import 'connexion/formulaire_connexion.dart';
 import 'inscription/formulaire_inscription.dart';
 
@@ -9,7 +10,8 @@ class PageAuthentification extends StatefulWidget {
   State<PageAuthentification> createState() => _PageAuthentificationState();
 }
 
-class _PageAuthentificationState extends State<PageAuthentification> with SingleTickerProviderStateMixin {
+class _PageAuthentificationState extends State<PageAuthentification>
+    with SingleTickerProviderStateMixin {
   late TabController _tabController;
 
   @override
@@ -37,7 +39,10 @@ class _PageAuthentificationState extends State<PageAuthentification> with Single
               children: [
                 const Text(
                   "FitBuddy",
-                  style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold, color: Colors.deepPurple),
+                  style: TextStyle(
+                      fontSize: 32,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.deepPurple),
                 ),
                 const SizedBox(height: 10),
                 TabBar(

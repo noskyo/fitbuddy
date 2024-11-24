@@ -1,6 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:geocoding/geocoding.dart'; // Import geocoding package
 
 void main() async {
@@ -132,7 +132,8 @@ class _FirebaseCallsState extends State<FirebaseCalls> {
               // Sélecteur de date pour l'événement
               Row(
                 children: [
-                  Text('Date de l\'événement: ${_selectedDate.toLocal()}'.split(' ')[0]),
+                  Text('Date de l\'événement: ${_selectedDate.toLocal()}'
+                      .split(' ')[0]),
                   IconButton(
                     icon: Icon(Icons.calendar_today),
                     onPressed: () => _selectDate(context),
@@ -143,7 +144,8 @@ class _FirebaseCallsState extends State<FirebaseCalls> {
               // Sélecteur de l'heure pour l'événement
               Row(
                 children: [
-                  Text('Heure de l\'événement: ${_selectedTime.format(context)}'),
+                  Text(
+                      'Heure de l\'événement: ${_selectedTime.format(context)}'),
                   IconButton(
                     icon: Icon(Icons.access_time),
                     onPressed: () => _selectTime(context),
@@ -176,7 +178,9 @@ class _FirebaseCallsState extends State<FirebaseCalls> {
                   final address = _addressController.text.trim();
                   final description = _descriptionController.text.trim();
 
-                  if (activityName.isNotEmpty && address.isNotEmpty && description.isNotEmpty) {
+                  if (activityName.isNotEmpty &&
+                      address.isNotEmpty &&
+                      description.isNotEmpty) {
                     addEvent(
                       activityName: activityName,
                       date: _selectedDate,
@@ -199,7 +203,10 @@ class _FirebaseCallsState extends State<FirebaseCalls> {
               // Afficher le message de confirmation après l'ajout de l'événement
               Text(
                 'Événement ajouté avec succès!',
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.green),
+                style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.green),
               ),
               SizedBox(height: 16),
               ElevatedButton(

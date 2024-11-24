@@ -1,6 +1,5 @@
-
-
 import 'package:flutter/material.dart';
+
 import 'are_you_sure_page.dart'; // Import the new page
 
 class SecondPage extends StatefulWidget {
@@ -141,19 +140,20 @@ class _SecondPageState extends State<SecondPage> {
                 child: _isLoading
                     ? const CircularProgressIndicator() // Show loading spinner
                     : _names.isEmpty
-                    ? const Text(
-                  'No names found.',
-                  style: TextStyle(fontSize: 18, color: Colors.black),
-                )
-                    : ListView.builder(
-                  itemCount: _names.length,
-                  itemBuilder: (context, index) {
-                    return Text(
-                      _names[index],
-                      style: const TextStyle(fontSize: 18, color: Colors.black),
-                    );
-                  },
-                ),
+                        ? const Text(
+                            'No names found.',
+                            style: TextStyle(fontSize: 18, color: Colors.black),
+                          )
+                        : ListView.builder(
+                            itemCount: _names.length,
+                            itemBuilder: (context, index) {
+                              return Text(
+                                _names[index],
+                                style: const TextStyle(
+                                    fontSize: 18, color: Colors.black),
+                              );
+                            },
+                          ),
               ),
             ),
             const SizedBox(height: 40),
@@ -168,7 +168,8 @@ class _SecondPageState extends State<SecondPage> {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.grey.shade200,
                     foregroundColor: Colors.black,
-                    padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 20),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 40, vertical: 20),
                   ),
                   child: const Text('oui'),
                 ),
@@ -176,13 +177,15 @@ class _SecondPageState extends State<SecondPage> {
                   onPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => const AreYouSurePage()),
+                      MaterialPageRoute(
+                          builder: (context) => const AreYouSurePage()),
                     ); // Navigate to the "Are you sure" page
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.grey.shade200,
                     foregroundColor: Colors.black,
-                    padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 20),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 40, vertical: 20),
                   ),
                   child: const Text('non'),
                 ),
