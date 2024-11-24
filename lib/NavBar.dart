@@ -4,14 +4,14 @@ import 'profile/profilePage.dart';
 import 'carte/carte.dart';
 import 'Feed/feed.dart';
 
-class BottomNavBar extends StatefulWidget {
-  const BottomNavBar({super.key});
+class NavBar extends StatefulWidget {
+  const NavBar({super.key});
 
   @override
-  State<BottomNavBar> createState() => _BottomNavBarState();
+  State<NavBar> createState() => _BottomNavBarState();
 }
 
-class _BottomNavBarState extends State<BottomNavBar> {
+class _BottomNavBarState extends State<NavBar> {
   int _selectedIndex = 0;
 
   void setIndexState(int index) {
