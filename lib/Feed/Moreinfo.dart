@@ -94,14 +94,6 @@ class _MoreInfoState extends State<MoreInfo> {
             ),
             Text('${widget.distance.toStringAsFixed(2)} meters', style: const TextStyle(fontSize: 16)),
             const SizedBox(height: 16),
-
-            // Go Back Button
-            ElevatedButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: const Text('Go Back'),
-            ),
           ],
         ),
       ),

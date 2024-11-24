@@ -75,28 +75,36 @@ class _EventCreationState extends State<EventCreation> {
     );
   }
 
-  // Date picker function (restrict future dates)
+  // Date picker function (allow only future dates)
   Future<void> _selectDate(BuildContext context) async {
     final DateTime picked = await showDatePicker(
       context: context,
       initialDate: _selectedDate,
-      firstDate: DateTime(2000),
-      lastDate: DateTime.now(), // Restrict future dates
+      firstDate: DateTime.now(), // Only future dates
+      lastDate: DateTime(2100), // Arbitrary far future date
     ) ?? _selectedDate;
-    setState(() {
-      _selectedDate = picked;
-    });
+
+    if (picked != _selectedDate) {
+      setState(() {
+        _selectedDate = picked;
+      });
+    }
   }
 
-  // Time picker function (cannot select the current time)
+  // Time picker function (enforce future times for today)
   Future<void> _selectTime(BuildContext context) async {
     final TimeOfDay picked = await showTimePicker(
       context: context,
       initialTime: _selectedTime,
     ) ?? _selectedTime;
 
-    if (picked.hour == TimeOfDay.now().hour && picked.minute == TimeOfDay.now().minute) {
-      // Avoid selecting the current time
+    final now = TimeOfDay.now();
+
+    if (_selectedDate.isAtSameMomentAs(DateTime.now()) &&
+        (picked.hour < now.hour || (picked.hour == now.hour && picked.minute <= now.minute))) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Please select a future time.')),
+      );
       return;
     }
 

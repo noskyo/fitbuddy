@@ -145,17 +145,6 @@ class _InteractiveMapState extends State<InteractiveMap> {
               ],
             ),
           ),
-          Positioned(
-            top: 40,
-            left: 10,
-            child: FloatingActionButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              backgroundColor: Colors.black,
-              child: const Icon(Icons.arrow_back, color: Colors.white),
-            ),
-          ),
         ],
       ),
       bottomNavigationBar: const NavBar(),

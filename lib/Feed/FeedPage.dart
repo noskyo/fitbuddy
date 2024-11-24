@@ -38,19 +38,22 @@ class _FeedPageState extends State<FeedPage> {
   Future<void> _getCurrentLocation() async {
     bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
-      return Future.error('Location services are disabled.');
+      print('Location services are disabled.');
+      return;
     }
 
     LocationPermission permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
       if (permission == LocationPermission.denied) {
-        return Future.error('Location permissions are denied.');
+        print('Location permissions are denied.');
+        return;
       }
     }
 
     if (permission == LocationPermission.deniedForever) {
-      return Future.error('Location permissions are permanently denied.');
+      print('Location permissions are permanently denied.');
+      return;
     }
 
     final position = await Geolocator.getCurrentPosition(
@@ -103,16 +106,30 @@ class _FeedPageState extends State<FeedPage> {
                     return Text('Error: ${snapshot.error}');
                   }
 
+                  if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+                    return const Text('No activities found.');
+                  }
+
                   final events = snapshot.data!.docs;
                   return ListView.builder(
                     itemCount: events.length,
                     itemBuilder: (context, index) {
-                      final event = events[index].data() as Map<String, dynamic>;
+                      final event = events[index].data() as Map<String, dynamic>?;
+
+                      if (event == null) {
+                        return const ListTile(
+                          title: Text('Error loading event'),
+                        );
+                      }
+
                       final eventName = event['ActivityName'] ?? 'Unnamed Event';
-                      final eventLatitude = event['Latitude'];
-                      final eventLongitude = event['Longitude'];
-                      final eventDate = event['EventDate'];
-                      final formattedDate = _formatTimestamp(eventDate);
+                      final eventAddress = event['Address'] ?? 'Unknown Address';
+                      final eventLatitude = event['Latitude'] as double?;
+                      final eventLongitude = event['Longitude'] as double?;
+                      final eventDescription = event['Description'] ?? 'No description available';
+                      final eventTimestamp = event['Timestamp'] as Timestamp?;
+                      final formattedDate =
+                      eventTimestamp != null ? _formatTimestamp(eventTimestamp) : 'Unknown Date';
 
                       double eventDistance = 0.0;
                       if (_currentPosition != null &&
@@ -129,7 +146,11 @@ class _FeedPageState extends State<FeedPage> {
                       return ListTile(
                         title: Text(eventName),
                         subtitle: Text(
-                            'Date: $formattedDate\nDistance: ${eventDistance.toStringAsFixed(2)} meters'),
+                          'Address: $eventAddress\n'
+                              'Date: $formattedDate\n'
+                              'Distance: ${eventDistance.toStringAsFixed(2)} meters\n'
+                              'Description: $eventDescription',
+                        ),
                         onTap: () {
                           Navigator.push(
                             context,
