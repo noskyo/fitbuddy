@@ -2,18 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:superfitbuddy/Feed/FeedPage.dart';
 
-class FormulaireConnexion extends StatelessWidget {
-  const FormulaireConnexion({super.key});
+class ConnexionForm extends StatelessWidget {
+  const ConnexionForm({super.key});
 
   @override
   Widget build(BuildContext context) {
     final TextEditingController emailController = TextEditingController();
     final TextEditingController passwordController = TextEditingController();
 
-    // Fonction de connexion
+    // Fonction de Connexion
     Future<void> connexion(BuildContext context) async {
       try {
-        // Tentative de connexion avec Firebase
+        // Tentative de Connexion avec Firebase
         await FirebaseAuth.instance.signInWithEmailAndPassword(
           email: emailController.text.trim(),
           password: passwordController.text.trim(),
@@ -24,15 +24,15 @@ class FormulaireConnexion extends StatelessWidget {
           const SnackBar(content: Text('Connexion réussie !')),
         );
 
-        // Naviguer vers la page FeedPage après une connexion réussie
+        // Naviguer vers la page FeedPage après une Connexion réussie
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => FeedPage()),
         );
       } on FirebaseAuthException catch (e) {
-        // Gestion des erreurs de connexion
+        // Gestion des erreurs de Connexion
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(e.message ?? 'Erreur de connexion')),
+          SnackBar(content: Text(e.message ?? 'Erreur de Connexion')),
         );
       }
     }

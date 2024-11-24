@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:superfitbuddy/Feed/FeedPage.dart';
-import 'package:superfitbuddy/pages/page_authentification.dart';
+import 'package:superfitbuddy/Auth/AuthPage.dart';
 import 'firebase_options.dart';
 import 'NavBar.dart';
 import 'Map/MapPage.dart';
@@ -34,26 +34,15 @@ class MyApp extends StatelessWidget {
 
     }
 
-    // Compte enregistré
-    // Connexion ou creation de compte
-
 
     return MaterialApp(
-      home: resultat ? FeedPage() : PageAuthentification(), // La page qui s'affiche au démarrage
+      home: resultat ? FeedPage() : AuthPage(), // La page qui s'affiche au démarrage
     );
   }
 }
 
 
 class _FirebaseTestPageState {
-  String _status = "Testing Firebase connection...";
-
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   _testFirebaseConnection();
-  // }
-
   void _testFirebaseConnection() async {
     try {
     // Test Firestore connection
@@ -62,69 +51,12 @@ class _FirebaseTestPageState {
     await testDoc.set({'timestamp': DateTime.now()});
     final snapshot = await testDoc.get();
       if (snapshot.exists) {
-        // setState(() {
           print("Firebase connection successful!");
-        //   _status = "Firebase connection successful!";
-        // });
       } else {
-        // setState(() {
           print("Firebase connection failed: No document found.") ;
-        // });
       }
     } catch (e) {
       print("Firebase connection failed: $e");
-      // setState(() {
-      //   _status = ;
-      // });
     }
   }
 }
-    //   if (snapshot.exists) {
-    //     setState(() {
-    //       _status = "Firebase connection successful!";
-    //     });
-    //   } else {
-    //     setState(() {
-    //       _status = "Firebase connection failed: No document found.";
-    //     });
-    //   }
-    // } catch (e) {
-    //   setState(() {
-    //     _status = "Firebase connection failed: $e";
-    //   });
-    // }
-  // }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-//         title: Text(widget.title),
-//       ),
-//       body: Center(
-//         child: Column(
-//           mainAxisAlignment: MainAxisAlignment.center, // Centre verticalement
-//           children: [
-//             Text(
-//               _status,
-//               textAlign: TextAlign.center,
-//               style: Theme.of(context).textTheme.headlineMedium,
-//             ),
-//             const SizedBox(height: 16),
-//             TextButton(
-//               onPressed: () {
-//                 Navigator.push(
-//                   context,
-//                   MaterialPageRoute(builder: (context) => InteractiveMap()),
-//                 );
-//               },
-//               child: const Text('on test la map'),
-//             ),
-//           ],
-//         ),
-//       ),
-//       bottomNavigationBar: const NavBar(),
-//     );
-//   }
-// }
