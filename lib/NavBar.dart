@@ -18,6 +18,7 @@ class _BottomNavBarState extends State<NavBar> {
     _selectedIndex = index;
   }
 
+  /// Changer de page lorsque l'icone est selectionné
   void _onItemTapped(int index, BuildContext context) {
     setIndexState(index);
 
@@ -25,7 +26,7 @@ class _BottomNavBarState extends State<NavBar> {
       case 0:
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => const MyApp()),
+          MaterialPageRoute(builder: (context) =>  MyApp()),
         );
         break;
       case 1:
