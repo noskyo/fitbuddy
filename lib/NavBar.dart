@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:superfitbuddy/Feed/FeedPage.dart';
 import 'package:superfitbuddy/main.dart';
-
 import 'Map/MapPage.dart';
 import 'Profile/ProfilePage.dart';
+import 'Profile/HelloWorldPage.dart'; // Import the new page
 
 class NavBar extends StatefulWidget {
   const NavBar({super.key});
@@ -16,7 +16,9 @@ class _BottomNavBarState extends State<NavBar> {
   int _selectedIndex = 0;
 
   void setIndexState(int index) {
-    _selectedIndex = index;
+    setState(() {
+      _selectedIndex = index;
+    });
   }
 
   void _onItemTapped(int index, BuildContext context) {
@@ -44,7 +46,13 @@ class _BottomNavBarState extends State<NavBar> {
       case 3:
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => ProfilePage(userId: 'exampleUserId')),
+          MaterialPageRoute(builder: (context) => ProfilePage()),
+        );
+        break;
+      case 4: // Add the HelloWorldPage as a new index
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => HelloWorldPage()),
         );
         break;
     }
@@ -54,21 +62,24 @@ class _BottomNavBarState extends State<NavBar> {
   Widget build(BuildContext context) {
     return BottomNavigationBar(
       currentIndex: _selectedIndex,
-      // The current selected index
       onTap: (index) => _onItemTapped(index, context),
-      // Handle item tap
       selectedItemColor: Colors.orange,
       unselectedItemColor: Colors.blue,
       showUnselectedLabels: true,
-      // Afficher les titres des autres icones
       items: const <BottomNavigationBarItem>[
         BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Accueil'),
         BottomNavigationBarItem(icon: Icon(Icons.ad_units), label: 'Activité'),
         BottomNavigationBarItem(
-            icon: Icon(Icons.map),
-            label: 'Carte',
-            backgroundColor: Colors.blue),
+          icon: Icon(Icons.map),
+          label: 'Carte',
+          backgroundColor: Colors.blue,
+        ),
         BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profil'),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.code),
+          label: 'Hello',
+          backgroundColor: Colors.green,
+        ), // New item for HelloWorldPage
       ],
     );
   }
