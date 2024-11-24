@@ -5,7 +5,6 @@ import 'Map/MapPage.dart';
 
 class NavBar extends StatefulWidget {
   const NavBar({super.key, required this.PageName});
-
   final String PageName;
 
   @override
@@ -15,19 +14,12 @@ class NavBar extends StatefulWidget {
 class _BottomNavBarState extends State<NavBar> {
   int _selectedIndex = 0;
 
-  // Colors for selected and unselected items
-  // final Color _defaultUnselectedColor = Colors.blue;
-  // final Color _selectedColor = Colors.orange;
-
-  // Define the navigation items
   late List<BottomNavigationBarItem> _navBarItems;
 
-  // // Define the colors for each item
-  // late List<Color> _iconColors;
+  late final Color _iconColor = Colors.blueAccent;
+  late final Color _selectedIconColor = Colors.pink;
 
-  late final Color _iconColor = Colors.pink;
-
-  final List<String> _labelNames =  ['Activité', 'Carte', 'Profil'];
+  final List<String> _labelNames = ['Activité', 'Carte', 'Profil'];
 
   // Define the corresponding pages
   final List<Widget> _pages = [
@@ -43,15 +35,10 @@ class _BottomNavBarState extends State<NavBar> {
   ];
 
   @override
-  void initState() { // #2 (#1 lorsque ouverture)
+  void initState() {
+    // #2 (#1 lorsque ouverture)
     super.initState();
     print("initState");
-
-    // Initialize icon colors
-    // _iconColors = List.filled(
-    //     3, _defaultUnselectedColor); // Set all to unselected initially
-
-    // Initialize navigation items
 
     _updateNavBarItems();
   }
@@ -61,60 +48,25 @@ class _BottomNavBarState extends State<NavBar> {
     // Update the navigation items based on the colors
     _navBarItems = List.generate(
       _labelNames.length,
-          (index) => BottomNavigationBarItem(
+      (index) => BottomNavigationBarItem(
         icon: Icon(_icons[index],
-            color:
-            ((_labelNames[index] == widget.PageName) ? Colors.purple :_iconColor)),
+            color: ((_labelNames[index] == widget.PageName)
+                ? _selectedIconColor
+                : _iconColor)),
         // Colors.cyan),
         label: _labelNames[index], // Labels for each item
       ),
     );
   }
 
-  //  List<BottomNavigationBarItem> _updateNavBarItems2() {
-  //    print("_updateNavBarItems2");
-  //
-  //    // Update the navigation items based on the colors
-  //   _navBarItems = List.generate(
-  //     _labelNames.length,
-  //         (index) => BottomNavigationBarItem(
-  //       icon: Icon(_icons[index],
-  //           color:
-  //           ((_labelNames[index] == widget.PageName) ? Colors.purple :_iconColor)),
-  //       // Colors.cyan),
-  //       label: _labelNames[index], // Labels for each item
-  //     ),
-  //   );
-  //
-  //   return  _navBarItems;
-  // }
+  void _onItemTapped(int index) {
+    // #1
+    _selectedIndex = index;
+    _updateNavBarItems();
 
-  void setIndexState(int index) {
-    print("setIndexState");
-
-    // setState(() {
-    //   _selectedIndex = index;
-    //
-    //   // Update colors for all items
-    //   _iconColors =
-    //       _iconColors.map((color) => _defaultUnselectedColor).toList();
-    //   _iconColors[index] = _selectedColor;
-    //
-    //   // Refresh the navigation items
-    //   // _updateNavBarItems();
-    // });
-  }
-
-  void _onItemTapped(int index) { // #1
-      _selectedIndex = index;
-      _updateNavBarItems();
-
-
-    // setIndexState(index);
     print("_onItemTapped");
 
     print(widget.PageName);
-    _selectedIndex = index;
 
     // Navigate to the corresponding page
     Navigator.push(
@@ -124,10 +76,9 @@ class _BottomNavBarState extends State<NavBar> {
   }
 
   @override
-  Widget build(BuildContext context) { // #2
-
+  Widget build(BuildContext context) {
+    // #2
     print("Build");
-    // List<BottomNavigationBarItem> allo = _updateNavBarItems2();
     return BottomNavigationBar(
       currentIndex: _selectedIndex, // The current selected index
       onTap: _onItemTapped, // Handle item tap
