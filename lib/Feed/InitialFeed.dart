@@ -11,6 +11,10 @@ class _HomePageState extends State<HomePage> {
   Position? _currentPosition;
   String? _currentAddress;
 
+  // Reference location (latitude, longitude)
+  double referenceLatitude = 40.748817;
+  double referenceLongitude = -73.985428; // Example: Empire State Building (New York)
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -42,6 +46,12 @@ class _HomePageState extends State<HomePage> {
               ),
               child: const Text("Get location"),
             ),
+            const SizedBox(height: 20),
+            if (_currentPosition != null)
+              Text(
+                "Distance from reference: ${_calculateDistance()} meters",
+                style: const TextStyle(fontSize: 18),
+              ),
           ],
         ),
       ),
@@ -99,5 +109,19 @@ class _HomePageState extends State<HomePage> {
     } catch (e) {
       print('Error getting address: $e');
     }
+  }
+
+  // Function to calculate the distance from the reference point in meters
+  double _calculateDistance() {
+    if (_currentPosition != null) {
+      double distanceInMeters = Geolocator.distanceBetween(
+        _currentPosition!.latitude,
+        _currentPosition!.longitude,
+        referenceLatitude,
+        referenceLongitude,
+      );
+      return distanceInMeters;
+    }
+    return 0.0;
   }
 }
