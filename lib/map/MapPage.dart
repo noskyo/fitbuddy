@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'mapData.dart';
+import '../NavBar.dart';
 
 class InteractiveMap extends StatefulWidget {
   const InteractiveMap({super.key});
@@ -119,6 +120,7 @@ class _InteractiveMapState extends State<InteractiveMap> {
           ),
         ],
       ),
+      bottomNavigationBar: const NavBar(),
     );
   }
 }
