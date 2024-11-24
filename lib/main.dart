@@ -23,7 +23,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    bool resultat = false; // false : Initialisation , true : Deja connectee --> VERIFIER SI DEJA CONNECTE
+    bool resultat = true; // false : Initialisation , true : Deja connectee --> VERIFIER SI DEJA CONNECTE
 
 
     _FirebaseTestPageState()._testFirebaseConnection();
