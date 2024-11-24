@@ -77,7 +77,10 @@ class _FeedPageState extends State<FeedPage> {
   }
 
   double _calculateDistanceFromCoordinates(
-      double startLatitude, double startLongitude, double endLatitude, double endLongitude) {
+      double startLatitude,
+      double startLongitude,
+      double endLatitude,
+      double endLongitude) {
     return Geolocator.distanceBetween(
         startLatitude, startLongitude, endLatitude, endLongitude);
   }
@@ -126,10 +129,12 @@ class _FeedPageState extends State<FeedPage> {
                       final eventAddress = event['Address'] ?? 'Unknown Address';
                       final eventLatitude = event['Latitude'] as double?;
                       final eventLongitude = event['Longitude'] as double?;
-                      final eventDescription = event['Description'] ?? 'No description available';
+                      final eventDescription =
+                          event['Description'] ?? 'No description available';
                       final eventTimestamp = event['Timestamp'] as Timestamp?;
-                      final formattedDate =
-                      eventTimestamp != null ? _formatTimestamp(eventTimestamp) : 'Unknown Date';
+                      final formattedDate = eventTimestamp != null
+                          ? _formatTimestamp(eventTimestamp)
+                          : 'Unknown Date';
 
                       double eventDistance = 0.0;
                       if (_currentPosition != null &&
@@ -143,25 +148,29 @@ class _FeedPageState extends State<FeedPage> {
                         );
                       }
 
-                      return ListTile(
-                        title: Text(eventName),
-                        subtitle: Text(
-                          'Address: $eventAddress\n'
-                              'Date: $formattedDate\n'
-                              'Distance: ${eventDistance.toStringAsFixed(2)} meters\n'
-                              'Description: $eventDescription',
-                        ),
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => MoreInfo(
-                                eventDetails: event,
-                                distance: eventDistance,
+                      return Card(
+                        margin: const EdgeInsets.symmetric(
+                            vertical: 8.0, horizontal: 12.0),
+                        child: ListTile(
+                          title: Text(eventName),
+                          subtitle: Text(
+                            'Address: $eventAddress\n'
+                                'Date: $formattedDate\n'
+                                'Distance: ${eventDistance.toStringAsFixed(2)} meters\n'
+                                'Description: $eventDescription',
+                          ),
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => MoreInfo(
+                                  eventDetails: event,
+                                  distance: eventDistance,
+                                ),
                               ),
-                            ),
-                          );
-                        },
+                            );
+                          },
+                        ),
                       );
                     },
                   );
