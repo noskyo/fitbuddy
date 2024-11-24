@@ -239,12 +239,6 @@ class _InteractiveMapState extends State<InteractiveMap> {
                                 'Distance: ${distance.toStringAsFixed(2)} meters', // Show calculated distance
                               ),
                               const SizedBox(height: 10),
-                              ElevatedButton(
-                                onPressed: () {
-                                  _showMarkerDetails(_selectedMarkerPoint!);
-                                },
-                                child: const Text('More Info'),
-                              ),
                             ],
                           );
                         },
