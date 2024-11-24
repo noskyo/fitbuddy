@@ -53,7 +53,7 @@ class _BottomNavBarState extends State<NavBar> {
 
     // Initialize navigation items
 
-    // _updateNavBarItems();
+    _updateNavBarItems();
   }
 
   void _updateNavBarItems() {
@@ -61,11 +61,11 @@ class _BottomNavBarState extends State<NavBar> {
     // Update the navigation items based on the colors
     _navBarItems = List.generate(
       _labelNames.length,
-      (index) => BottomNavigationBarItem(
+          (index) => BottomNavigationBarItem(
         icon: Icon(_icons[index],
             color:
-            ((_labelNames[index] == widget.PageName) ? Colors.purple : _iconColor)),
-            // Colors.cyan),
+            ((_labelNames[index] == widget.PageName) ? Colors.purple :_iconColor)),
+        // Colors.cyan),
         label: _labelNames[index], // Labels for each item
       ),
     );
@@ -127,6 +127,7 @@ class _BottomNavBarState extends State<NavBar> {
   Widget build(BuildContext context) { // #2
 
     print("Build");
+    // List<BottomNavigationBarItem> allo = _updateNavBarItems2();
     return BottomNavigationBar(
       currentIndex: _selectedIndex, // The current selected index
       onTap: _onItemTapped, // Handle item tap
