@@ -21,9 +21,9 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.example.google_maps_in_flutter" // Keep your unique Application ID here
-        minSdk = 23 // Adjusted to 23 based on your first block's config (or 21 from the second block if needed)
-        targetSdk = 34
+        applicationId = "com.example.superfitbuddy"
+        minSdk = 23 // Causait des problemes
+        targetSdk = 33
         versionCode = flutter.versionCode
         versionName = flutter.versionName
     }
