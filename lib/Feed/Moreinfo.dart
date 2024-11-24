@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_map/flutter_map.dart';
 import 'package:intl/intl.dart';
-import 'package:flutter_map/flutter_map.dart'; // Import flutter_map
-import 'package:latlong2/latlong.dart'; // Import latlong2 for coordinates
+import 'package:latlong2/latlong.dart'; // For formatting the date
 
 class MoreInfo extends StatefulWidget {
   final Map<String, dynamic> eventDetails;
@@ -62,7 +62,7 @@ class _MoreInfoState extends State<MoreInfo> {
                 height: 250,
                 child: FlutterMap(
                   options: MapOptions(
-                    center: LatLng(eventLatitude, eventLongitude), // Using LatLng from latlong2
+                    center: LatLng(eventLatitude, eventLongitude),
                     zoom: 14,
                   ),
                   children: [
@@ -113,14 +113,11 @@ class _MoreInfoState extends State<MoreInfo> {
     List<Marker> markers = [];
 
     if (eventLatitude != null && eventLongitude != null) {
-      markers.add(
-        Marker(
-          point: LatLng(eventLatitude, eventLongitude),
-          builder: (ctx) => const Icon(Icons.location_on, color: Colors.red),
-        ),
-      );
+      markers.add(Marker(
+        point: LatLng(eventLatitude, eventLongitude),
+        builder: (context) => const Icon(Icons.location_pin, size: 40, color: Colors.blue),
+      ));
     }
-
     return markers;
   }
 }
