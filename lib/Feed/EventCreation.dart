@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:geocoding/geocoding.dart';
 
 void main() async {
@@ -54,6 +55,16 @@ class _EventCreationState extends State<EventCreation> {
       _selectedTime.minute,
     );
 
+    // Get the UID of the current user
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('User not authenticated! Please log in first.')),
+      );
+      return;
+    }
+    String userID = user.uid;
+
     // Create a new document in the "Activity" collection
     await FirebaseFirestore.instance.collection('Activity').add({
       'ActivityName': activityName,
@@ -62,6 +73,7 @@ class _EventCreationState extends State<EventCreation> {
       'Description': description,
       'Latitude': latitude,
       'Longitude': longitude,
+      'UserID': userID, // Add user ID to the Firestore document
     });
 
     // Clear fields after saving

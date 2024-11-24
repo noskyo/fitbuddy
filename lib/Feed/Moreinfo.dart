@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:intl/intl.dart';
-import 'package:latlong2/latlong.dart'; // For formatting the date
+import 'package:latlong2/latlong.dart';
 
 class MoreInfo extends StatefulWidget {
   final Map<String, dynamic> eventDetails;
@@ -36,23 +36,18 @@ class _MoreInfoState extends State<MoreInfo> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Event Name
             const Text(
               'Event Name:',
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
             ),
             Text(eventName, style: const TextStyle(fontSize: 16)),
             const SizedBox(height: 16),
-
-            // Event Date
             const Text(
               'Event Date:',
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
             ),
             Text(formattedDate, style: const TextStyle(fontSize: 16)),
             const SizedBox(height: 16),
-
-            // Event Location on OpenStreetMap (if available)
             if (eventLatitude != null && eventLongitude != null) ...[
               const Text(
                 'Location:',
@@ -78,16 +73,12 @@ class _MoreInfoState extends State<MoreInfo> {
               ),
               const SizedBox(height: 16),
             ],
-
-            // Event Description
             const Text(
               'Description:',
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
             ),
             Text(description, style: const TextStyle(fontSize: 16)),
             const SizedBox(height: 16),
-
-            // Event Distance
             const Text(
               'Distance from your location:',
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
@@ -100,10 +91,8 @@ class _MoreInfoState extends State<MoreInfo> {
     );
   }
 
-  // Function to create markers with location coordinates displayed
   List<Marker> _createMarkers(double? eventLatitude, double? eventLongitude) {
     List<Marker> markers = [];
-
     if (eventLatitude != null && eventLongitude != null) {
       markers.add(Marker(
         point: LatLng(eventLatitude, eventLongitude),

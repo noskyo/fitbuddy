@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
-import 'package:latlong2/latlong.dart';
+import 'package:latlong2/latlong.dart'; // for LatLng
 import 'package:geolocator/geolocator.dart'; // For getting the user's current location
+import 'dart:ui' as ui;  // Import dart:ui and alias it to avoid confusion
 import '../Feed/MoreInfo.dart';
 import '../Feed/EventCreation.dart'; // Import EventCreation page
 import '../NavBar.dart';
@@ -20,6 +21,9 @@ class _InteractiveMapState extends State<InteractiveMap> {
   double _currentZoom = 13.0;
   LatLng _currentCenter = LatLng(45.5017, -73.5673); // Default to Montreal
   Position? _currentPosition;
+
+  // Popup position
+  Offset? _popupPosition;
 
   @override
   void initState() {
@@ -49,6 +53,13 @@ class _InteractiveMapState extends State<InteractiveMap> {
           builder: (context) => GestureDetector(
             onTap: () {
               _showMarkerDetails(point); // Show details when a marker is clicked
+              setState(() {
+                // Set the popup position to where the event took place
+                _popupPosition = Offset(
+                  point['latitude'],
+                  point['longitude'],
+                );
+              });
             },
             child: const Icon(
               Icons.location_pin,
@@ -110,6 +121,22 @@ class _InteractiveMapState extends State<InteractiveMap> {
               MarkerLayer(markers: _markers),
             ],
           ),
+          if (_popupPosition != null)
+            Positioned(
+              left: _popupPosition!.dx,
+              top: _popupPosition!.dy,
+              child: GestureDetector(
+                onTap: () {
+                  setState(() {
+                    _popupPosition = null; // Hide the popup when tapped
+                  });
+                },
+                child: CustomPaint(
+                  size: Size(100, 50), // Size of the popup
+                  painter: _PopupPointerPainter(_popupPosition!),
+                ),
+              ),
+            ),
           Positioned(
             bottom: 40,
             right: 20,
@@ -130,16 +157,16 @@ class _InteractiveMapState extends State<InteractiveMap> {
                   },
                   child: const Icon(Icons.zoom_out),
                 ),
-                const SizedBox(height: 10),  // Add spacing between zoom buttons and the '+' button
+                const SizedBox(height: 10),
                 FloatingActionButton(
                   onPressed: () {
                     // Navigate to EventCreation page
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) =>  EventCreation()), // Assuming EventCreation is in 'Feed' directory
+                      MaterialPageRoute(builder: (context) => EventCreation()),
                     );
                   },
-                  backgroundColor: Colors.grey[200], // Match color with zoom buttons
+                  backgroundColor: Colors.grey[200],
                   child: const Icon(Icons.add, color: Colors.black),
                 ),
               ],
@@ -150,4 +177,28 @@ class _InteractiveMapState extends State<InteractiveMap> {
       bottomNavigationBar: const NavBar(),
     );
   }
+}
+
+// CustomPainter to draw a triangle (pointer) on the popup
+class _PopupPointerPainter extends CustomPainter {
+  final Offset position;
+
+  _PopupPointerPainter(this.position);
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final Paint paint = Paint()..color = Colors.white;
+    final ui.Path path = ui.Path();  // Use ui.Path from dart:ui
+
+    // Create a downward-pointing triangle that positions the pointer where you want it
+    path.moveTo(position.dx - 10, position.dy); // Left point of the triangle
+    path.lineTo(position.dx + 10, position.dy); // Right point of the triangle
+    path.lineTo(position.dx, position.dy + 10); // Bottom center point
+    path.close();
+
+    canvas.drawPath(path, paint);
+  }
+
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) => false;
 }
