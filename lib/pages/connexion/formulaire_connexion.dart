@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:superfitbuddy/Feed/FeedPage.dart';
 
 class FormulaireConnexion extends StatelessWidget {
   const FormulaireConnexion({super.key});
@@ -9,16 +10,27 @@ class FormulaireConnexion extends StatelessWidget {
     final TextEditingController emailController = TextEditingController();
     final TextEditingController passwordController = TextEditingController();
 
-    Future<void> connexion() async {
+    // Fonction de connexion
+    Future<void> connexion(BuildContext context) async {
       try {
+        // Tentative de connexion avec Firebase
         await FirebaseAuth.instance.signInWithEmailAndPassword(
           email: emailController.text.trim(),
           password: passwordController.text.trim(),
         );
+
+        // Affichage d'un message de succès
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Connexion réussie !')),
         );
+
+        // Naviguer vers la page FeedPage après une connexion réussie
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => FeedPage()),
+        );
       } on FirebaseAuthException catch (e) {
+        // Gestion des erreurs de connexion
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(e.message ?? 'Erreur de connexion')),
         );
@@ -48,7 +60,8 @@ class FormulaireConnexion extends StatelessWidget {
           ),
           const SizedBox(height: 20),
           ElevatedButton(
-            onPressed: connexion,
+            // Encapsuler l'appel dans une fonction anonyme
+            onPressed: () => connexion(context),
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.deepPurple,
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import '../../Feed/FeedPage.dart';
 
 class FormulaireInscription extends StatefulWidget {
   const FormulaireInscription({super.key});
@@ -66,6 +67,10 @@ class _FormulaireInscriptionState extends State<FormulaireInscription> {
         });
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Compte créé avec succès !')),
+        );
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => FeedPage()),
         );
       }
     } on FirebaseAuthException catch (e) {
