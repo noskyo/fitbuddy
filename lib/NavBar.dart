@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:superfitbuddy/Feed/FeedPage.dart';
+import 'package:superfitbuddy/main.dart';
 import 'Profile/ProfilePage.dart';
 import 'Map/MapPage.dart';
 

@@ -22,7 +22,7 @@ dependencies:
   flutter_map_marker_popup: ^5.1.0
   latlong2: ^0.8.1
   firebase_auth: ^5.3.3
-
+  flutter_datetime_picker: ^1.5.1
 dev_dependencies:
   flutter_test:
     sdk: flutter

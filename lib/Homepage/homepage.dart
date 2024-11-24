@@ -1,7 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
-class HomePageWidget extends StatelessWidget {
+class HomePageWidget extends StatefulWidget {
+  @override
+  _HomePageWidgetState createState() => _HomePageWidgetState();
+}
+
+class _HomePageWidgetState extends State<HomePageWidget> {
+  String userName = "Utilisateur"; // Nom par défaut
+
   final List<Map<String, dynamic>> dailyContent = [
     {
       'title': 'Challenge du jour',
@@ -10,17 +19,44 @@ class HomePageWidget extends StatelessWidget {
     },
     {
       'title': 'Citation du jour',
-      'description':
-      '“Le succès n’est pas final, l’échec n’est pas fatal : c’est le courage de continuer qui compte.”',
+      'description': '“Le succès n’est pas final, l’échec n’est pas fatal : c’est le courage de continuer qui compte.”',
       'image': 'assets/images/montagne.png',
     },
     {
       'title': 'Aliment du jour',
-      'description':
-      'Ajoutez une poignée de noix dans vos repas pour un boost d’énergie !',
+      'description': 'Ajoutez une poignée de noix dans vos repas pour un boost d’énergie !',
       'image': 'assets/images/nuts.png',
     },
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchUserName(); // Récupération du nom de l'utilisateur au démarrage
+  }
+
+  Future<void> _fetchUserName() async {
+    try {
+      // Récupérer l'ID de l'utilisateur connecté
+      User? currentUser = FirebaseAuth.instance.currentUser;
+
+      if (currentUser != null) {
+        // Requête à Firestore pour obtenir les détails de l'utilisateur
+        DocumentSnapshot userDoc = await FirebaseFirestore.instance
+            .collection('users')
+            .doc(currentUser.uid)
+            .get();
+
+        if (userDoc.exists) {
+          setState(() {
+            userName = userDoc.get('prenom') ?? "Utilisateur"; // Récupérer le prénom
+          });
+        }
+      }
+    } catch (e) {
+      print("Erreur lors de la récupération du nom : $e");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,12 +71,16 @@ class HomePageWidget extends StatelessWidget {
         ),
         child: Column(
           children: [
-            AppBar(
-              title: const Text('Accueil - Carrousel'),
-              centerTitle: true,
-              elevation: 0,
-              backgroundColor: Colors.transparent,
+            const SizedBox(height: 50),
+            Text(
+              'Bonjour, $userName',
+              style: const TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF3E4A59),
+              ),
             ),
+            const SizedBox(height: 20),
             Expanded(
               child: CarouselSlider(
                 options: CarouselOptions(
@@ -122,8 +162,9 @@ class HomePageWidget extends StatelessWidget {
                 }).toList(),
               ),
             ),
+            const SizedBox(height: 20),
             Padding(
-              padding: const EdgeInsets.only(top: 20.0, bottom: 20.0),
+              padding: const EdgeInsets.only(bottom: 30.0),
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 15),

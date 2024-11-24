@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
-import 'package:latlong2/latlong.dart';
+import 'package:latlong2/latlong.dart'; // for LatLng
 import 'package:geolocator/geolocator.dart'; // For getting the user's current location
+import 'dart:ui' as ui;  // Import dart:ui and alias it to avoid confusion
 import '../Feed/MoreInfo.dart';
 import '../Feed/EventCreation.dart'; // Import EventCreation page
 import '../NavBar.dart';
@@ -22,6 +23,9 @@ class _InteractiveMapState extends State<InteractiveMap> {
   Position? _currentPosition;
   Map<String, dynamic>? _selectedMarkerPoint; // Track the selected marker
   bool _isPopupOpen = false; // Track if the popup is open
+
+  // Popup position
+  Offset? _popupPosition;
 
   @override
   void initState() {
@@ -60,6 +64,13 @@ class _InteractiveMapState extends State<InteractiveMap> {
           builder: (context) => GestureDetector(
             onTap: () {
               _showMarkerDetails(point); // Show details when a marker is clicked
+              setState(() {
+                // Set the popup position to where the event took place
+                _popupPosition = Offset(
+                  point['latitude'],
+                  point['longitude'],
+                );
+              });
             },
             child: const Icon(
               Icons.location_pin,
@@ -239,12 +250,6 @@ class _InteractiveMapState extends State<InteractiveMap> {
                                 'Distance: ${distance.toStringAsFixed(2)} meters', // Show calculated distance
                               ),
                               const SizedBox(height: 10),
-                              ElevatedButton(
-                                onPressed: () {
-                                  _showMarkerDetails(_selectedMarkerPoint!);
-                                },
-                                child: const Text('More Info'),
-                              ),
                             ],
                           );
                         },
@@ -259,4 +264,28 @@ class _InteractiveMapState extends State<InteractiveMap> {
       bottomNavigationBar: const NavBar(PageName: "Carte"),
     );
   }
+}
+
+// CustomPainter to draw a triangle (pointer) on the popup
+class _PopupPointerPainter extends CustomPainter {
+  final Offset position;
+
+  _PopupPointerPainter(this.position);
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final Paint paint = Paint()..color = Colors.white;
+    final ui.Path path = ui.Path();  // Use ui.Path from dart:ui
+
+    // Create a downward-pointing triangle that positions the pointer where you want it
+    path.moveTo(position.dx - 10, position.dy); // Left point of the triangle
+    path.lineTo(position.dx + 10, position.dy); // Right point of the triangle
+    path.lineTo(position.dx, position.dy + 10); // Bottom center point
+    path.close();
+
+    canvas.drawPath(path, paint);
+  }
+
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) => false;
 }
