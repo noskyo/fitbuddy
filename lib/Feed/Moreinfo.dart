@@ -83,7 +83,7 @@ class _MoreInfoState extends State<MoreInfo> {
               'Distance from your location:',
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
             ),
-            Text('${widget.distance.toStringAsFixed(2)} meters', style: const TextStyle(fontSize: 16)),
+            Text('${widget.distance.toStringAsFixed(2)} KM', style: const TextStyle(fontSize: 16)),
             const SizedBox(height: 16),
           ],
         ),

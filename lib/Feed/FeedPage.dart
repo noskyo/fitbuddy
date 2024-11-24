@@ -14,8 +14,8 @@ class FeedPage extends StatefulWidget {
 
 class _FeedPageState extends State<FeedPage> {
   // Griffintown, Montreal coordinates
-  final double referenceLatitude = 45.4850;
-  final double referenceLongitude = -73.5610;
+  final double referenceLatitude = 45.29416;
+  final double referenceLongitude = 73.33449;
 
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
@@ -25,7 +25,11 @@ class _FeedPageState extends State<FeedPage> {
       double startLongitude,
       double endLatitude,
       double endLongitude) {
-    const double R = 6371000; // Earth's radius in meters
+    print(startLatitude);
+    print(startLongitude);
+    print(endLatitude);
+    print(endLongitude);
+    const double R = 6371; // Earth's radius in meters
     double dLat = _degreesToRadians(endLatitude - startLatitude);
     double dLon = _degreesToRadians(endLongitude - startLongitude);
 
@@ -53,80 +57,97 @@ class _FeedPageState extends State<FeedPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: StreamBuilder<QuerySnapshot>(
-          stream: _firestore.collection('Activity').snapshots(),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const CircularProgressIndicator();
-            }
-            if (snapshot.hasError) {
-              return Text('Error: ${snapshot.error}');
-            }
+      body: SafeArea(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Text(
+                'Activité dans votre Quartier',
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+            Expanded(
+              child: StreamBuilder<QuerySnapshot>(
+                stream: _firestore.collection('Activity').snapshots(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
+                  if (snapshot.hasError) {
+                    return Center(child: Text('Error: ${snapshot.error}'));
+                  }
 
-            if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-              return const Text('No activities found.');
-            }
+                  if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+                    return const Center(child: Text('No activities found.'));
+                  }
 
-            final events = snapshot.data!.docs;
-            return ListView.builder(
-              itemCount: events.length,
-              itemBuilder: (context, index) {
-                final event = events[index].data() as Map<String, dynamic>?;
+                  final events = snapshot.data!.docs;
+                  return ListView.builder(
+                    itemCount: events.length,
+                    itemBuilder: (context, index) {
+                      final event = events[index].data() as Map<String, dynamic>?;
 
-                if (event == null) {
-                  return const ListTile(
-                    title: Text('Error loading event'),
-                  );
-                }
+                      if (event == null) {
+                        return const ListTile(
+                          title: Text('Error loading event'),
+                        );
+                      }
 
-                final eventName = event['ActivityName'] ?? 'Unnamed Event';
-                final eventLatitude = event['Latitude'] as double?;
-                final eventLongitude = event['Longitude'] as double?;
-                final formattedDate = _formatTimestamp(event['Timestamp']);
-                final seriousness = event['Seriousness'] ?? 'Unknown';
-                final gender = event['Gender'] ?? 'Mix';
-                final eventDescription =
-                    event['Description'] ?? 'No description available';
+                      final eventName = event['ActivityName'] ?? 'Unnamed Event';
+                      final eventLatitude = event['Latitude'] as double?;
+                      final eventLongitude = event['Longitude'] as double?;
+                      final formattedDate = _formatTimestamp(event['Timestamp']);
+                      final seriousness = event['Seriousness'] ?? 'Unknown';
+                      final gender = event['Gender'] ?? 'Mix';
+                      final eventDescription =
+                          event['Description'] ?? 'No description available';
 
-                double eventDistance = 0.0;
-                if (eventLatitude != null && eventLongitude != null) {
-                  eventDistance = _calculateDistanceFromCoordinates(
-                    referenceLatitude,
-                    referenceLongitude,
-                    eventLatitude,
-                    eventLongitude,
-                  );
-                }
+                      double eventDistance = 0.0;
+                      if (eventLatitude != null && eventLongitude != null) {
+                        eventDistance = _calculateDistanceFromCoordinates(
+                          referenceLatitude,
+                          referenceLongitude,
+                          eventLatitude,
+                          eventLongitude,
+                        );
+                      }
 
-                return Card(
-                  margin: const EdgeInsets.symmetric(
-                      vertical: 8.0, horizontal: 12.0),
-                  child: ListTile(
-                    title: Text(eventName),
-                    subtitle: Text(
-                      'Distance: ${eventDistance.toStringAsFixed(2)} meters\n'
-                          'Date: $formattedDate\n'
-                          'Seriousness: $seriousness\n'
-                          'Gender: $gender\n'
-                          'Description: $eventDescription',
-                    ),
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => MoreInfo(
-                            eventDetails: event,
-                            distance: eventDistance,
+                      return Card(
+                        margin: const EdgeInsets.symmetric(
+                            vertical: 8.0, horizontal: 12.0),
+                        child: ListTile(
+                          title: Text(eventName),
+                          subtitle: Text(
+                            'Distance: ${eventDistance.toStringAsFixed(2)} KM\n'
+                                'Date: $formattedDate\n'
+                                'Seriousness: $seriousness\n'
+                                'Gender: $gender\n'
+                                'Description: $eventDescription',
                           ),
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => MoreInfo(
+                                  eventDetails: event,
+                                  distance: eventDistance,
+                                ),
+                              ),
+                            );
+                          },
                         ),
                       );
                     },
-                  ),
-                );
-              },
-            );
-          },
+                  );
+                },
+              ),
+            ),
+          ],
         ),
       ),
       bottomNavigationBar: const NavBar(),
