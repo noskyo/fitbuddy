@@ -1,5 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:superfitbuddy/Feed/FeedPage.dart';
 import 'package:superfitbuddy/Auth/AuthPage.dart';
 import 'package:superfitbuddy/Homepage/homepage.dart'; // Chemin vers votre HomePageWidget
@@ -18,16 +20,42 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Vérification dynamique de l'état de connexion Firebase
+    User? currentUser = FirebaseAuth.instance.currentUser;
+    bool isUserConnected = currentUser == null;
+
+    // Page initiale en fonction de l'état de connexion
+    Widget initialPage = isUserConnected ? HomePageWidget() : AuthPage();
+
     return MaterialApp(
-      home: HomePageWidget(), // La page d'accueil est définie sur HomePageWidget
+      home: initialPage, // Définir la page initiale
       debugShowCheckedModeBanner: false,
       title: 'SuperFitBuddy',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
       routes: {
-        '/feed': (context) => FeedPage(), // Définir la route pour FeedPage
+        '/feed': (context) => FeedPage(), // Route nommée pour FeedPage
       },
     );
+  }
+}
+
+// Classe pour tester la connexion Firebase
+class _FirebaseTestPageState {
+  void _testFirebaseConnection() async {
+    try {
+      // Test Firestore connection
+      final testDoc = FirebaseFirestore.instance.collection('test').doc('testDoc');
+      await testDoc.set({'timestamp': DateTime.now()});
+      final snapshot = await testDoc.get();
+      if (snapshot.exists) {
+        print("Firebase connection successful!");
+      } else {
+        print("Firebase connection failed: No document found.");
+      }
+    } catch (e) {
+      print("Firebase connection failed: $e");
+    }
   }
 }
