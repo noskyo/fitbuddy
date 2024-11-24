@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
-import 'MapData.dart';
+import 'package:geolocator/geolocator.dart'; // For getting the user's current location
+import '../Feed/MoreInfo.dart';
+import '../Feed/EventCreation.dart'; // Import EventCreation page
 import '../NavBar.dart';
+import 'MapData.dart'; // Import MoreInfo page
 
 class InteractiveMap extends StatefulWidget {
   const InteractiveMap({super.key});
@@ -15,16 +18,28 @@ class _InteractiveMapState extends State<InteractiveMap> {
   final MapController _mapController = MapController();
   List<Marker> _markers = [];
   double _currentZoom = 13.0;
-  LatLng _currentCenter = LatLng(45.5017, -73.5673); // Montréal (par défaut)
+  LatLng _currentCenter = LatLng(45.5017, -73.5673); // Default to Montreal
+  Position? _currentPosition;
 
   @override
   void initState() {
     super.initState();
-    _loadMarkers(); // Charger les marqueurs depuis Firestore
+    _loadMarkers(); // Load markers from Firestore
+    _getCurrentLocation(); // Get the current location
   }
 
+  // Get the user's current location
+  Future<void> _getCurrentLocation() async {
+    Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+    setState(() {
+      _currentPosition = position;
+      _currentCenter = LatLng(position.latitude, position.longitude); // Update map center to user's location
+    });
+  }
+
+  // Function to load markers (for demonstration, replace with real data)
   Future<void> _loadMarkers() async {
-    List<Map<String, dynamic>> activityPoints = await fetchActivityPoints();
+    List<Map<String, dynamic>> activityPoints = await fetchActivityPoints(); // Fetch activity points from Firebase
     setState(() {
       _markers = activityPoints.map((point) {
         return Marker(
@@ -33,7 +48,7 @@ class _InteractiveMapState extends State<InteractiveMap> {
           height: 80,
           builder: (context) => GestureDetector(
             onTap: () {
-              _showMarkerDetails(point);
+              _showMarkerDetails(point); // Show details when a marker is clicked
             },
             child: const Icon(
               Icons.location_pin,
@@ -46,32 +61,33 @@ class _InteractiveMapState extends State<InteractiveMap> {
     });
   }
 
-  void _showMarkerDetails(Map<String, dynamic> point) {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: Text(point['name']),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text("Description: ${point['description']}"),
-              const SizedBox(height: 10),
-              Text("Latitude: ${point['latitude']}"),
-              Text("Longitude: ${point['longitude']}"),
-            ],
+  // Show marker details and navigate to MoreInfo page
+  void _showMarkerDetails(Map<String, dynamic> point) async {
+    if (_currentPosition != null) {
+      double distance = await _calculateDistance(
+          _currentPosition!.latitude,
+          _currentPosition!.longitude,
+          point['latitude'],
+          point['longitude']
+      );
+
+      // Navigate to MoreInfo page and pass event details and distance
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => MoreInfo(
+            eventDetails: point,
+            distance: distance,
           ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text('Fermer'),
-            ),
-          ],
-        );
-      },
-    );
+        ),
+      );
+    }
+  }
+
+  // Function to calculate the distance between the user's current location and the event
+  Future<double> _calculateDistance(double userLat, double userLng, double eventLat, double eventLng) async {
+    var distance = Geolocator.distanceBetween(userLat, userLng, eventLat, eventLng);
+    return distance; // Returns the distance in meters
   }
 
   @override
@@ -113,6 +129,18 @@ class _InteractiveMapState extends State<InteractiveMap> {
                     _mapController.move(_currentCenter, _currentZoom);
                   },
                   child: const Icon(Icons.zoom_out),
+                ),
+                const SizedBox(height: 10),  // Add spacing between zoom buttons and the '+' button
+                FloatingActionButton(
+                  onPressed: () {
+                    // Navigate to EventCreation page
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) =>  EventCreation()), // Assuming EventCreation is in 'Feed' directory
+                    );
+                  },
+                  backgroundColor: Colors.grey[200], // Match color with zoom buttons
+                  child: const Icon(Icons.add, color: Colors.black),
                 ),
               ],
             ),
