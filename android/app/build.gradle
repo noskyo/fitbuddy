@@ -21,7 +21,7 @@ android {
 
     defaultConfig {
         applicationId = "com.example.superfitbuddy"
-        minSdk = flutter.minSdkVersion
+        minSdkVersion 23 // Remplacer flutter.minSdkVersion par 23
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
@@ -39,7 +39,8 @@ flutter {
 }
 
 dependencies {
-    implementation platform('com.google.firebase:firebase-bom:32.1.1') // Use the latest BOM version
-    implementation 'com.google.firebase:firebase-analytics'
+    implementation platform('com.google.firebase:firebase-bom:32.1.1') // Assurez-vous que c'est à jour
+    implementation 'com.google.firebase:firebase-auth'
     implementation 'com.google.firebase:firebase-firestore'
 }
+
